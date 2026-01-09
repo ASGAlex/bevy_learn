@@ -1,0 +1,100 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "C:/Users/asgalex/Documents/Projects/Rust/bevy_ecs_tiled/assets/worlds/orthogonal/world_map001.tmx",
+    "expandedProjectPaths": [
+    ],
+    "file.lastUsedOpenFilter": "Все файлы (*)",
+    "fileStates": {
+        "C:/Users/asgalex/Documents/Projects/Rust/bevy_ecs_tiled/assets/maps/orthogonal/multiple_layers_with_colliders.tmx": {
+            "scale": 1,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 419.5,
+                "y": 404.5
+            }
+        },
+        "C:/Users/asgalex/Documents/Projects/Rust/bevy_ecs_tiled/assets/tiles/orthogonal_1.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "C:/Users/asgalex/Documents/Projects/Rust/bevy_ecs_tiled/assets/worlds/orthogonal/world_map001.tmx": {
+            "scale": 0.125,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 1660,
+                "y": 2772
+            }
+        },
+        "C:/Users/asgalex/Documents/Projects/flutter-projects/tank_game/assets/tiles/bricks.tsx": {
+            "scaleInDock": 11
+        },
+        "C:/Users/asgalex/Documents/Projects/flutter-projects/tank_game/assets/tiles/ground.tsx": {
+            "scaleInDock": 8
+        },
+        "C:/Users/asgalex/Documents/Projects/flutter-projects/tank_game/assets/tiles/radar_head.tsx": {
+            "scaleInDock": 4
+        },
+        "C:/Users/asgalex/Documents/Projects/flutter-projects/tank_game/assets/tiles/tutorial.tmx": {
+            "scale": 4,
+            "selectedLayer": 4,
+            "viewCenter": {
+                "x": 248.125,
+                "y": 177.625
+            }
+        },
+        "tiles/bricks.tsx": {
+            "scaleInDock": 5.5,
+            "scaleInEditor": 1
+        },
+        "tiles/ground.tsx": {
+            "scaleInDock": 5.5
+        },
+        "tiles/radar_head.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1
+        },
+        "tiles/second.tmx": {
+            "scale": 1.5,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": -181.66666666666669,
+                "y": 251.66666666666669
+            }
+        },
+        "tiles/tutorial.tmx": {
+            "scale": 1.5,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 258.3333333333333,
+                "y": 259.6666666666667
+            }
+        }
+    },
+    "last.worldFilePath": "C:/Users/asgalex/Documents/Projects/Rust/bevy_ecs_tiled/assets/worlds",
+    "loadedWorlds": [
+        "C:/Users/asgalex/Documents/Projects/Rust/bevy_ecs_tiled/assets/worlds/orthogonal.world",
+        "C:/Users/asgalex/Documents/Projects/Rust/bevy_learn/assets/tiles/learn.world"
+    ],
+    "map.fixedSize": false,
+    "map.lastUsedFormat": "tmx",
+    "map.renderOrder": "2",
+    "map.tileHeight": 8,
+    "map.tileWidth": 8,
+    "openFiles": [
+        "C:/Users/asgalex/Documents/Projects/Rust/bevy_ecs_tiled/assets/worlds/orthogonal/world_map001.tmx"
+    ],
+    "project": "learn.tiled-project",
+    "recentFiles": [
+        "C:/Users/asgalex/Documents/Projects/Rust/bevy_ecs_tiled/assets/worlds/orthogonal/world_map001.tmx",
+        "C:/Users/asgalex/Documents/Projects/Rust/bevy_ecs_tiled/assets/tiles/orthogonal_1.tsx",
+        "tiles/tutorial.tmx",
+        "tiles/second.tmx",
+        "C:/Users/asgalex/Documents/Projects/Rust/bevy_ecs_tiled/assets/maps/orthogonal/multiple_layers_with_colliders.tmx",
+        "tiles/bricks.tsx",
+        "C:/Users/asgalex/Documents/Projects/flutter-projects/tank_game/assets/tiles/tutorial.tmx"
+    ]
+}
