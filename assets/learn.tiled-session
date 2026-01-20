@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "C:/Users/asgalex/Documents/Projects/Rust/bevy_ecs_tiled/assets/worlds/orthogonal/world_map001.tmx",
+    "activeFile": "tiles/tutorial.tmx",
     "expandedProjectPaths": [
     ],
     "file.lastUsedOpenFilter": "Все файлы (*)",
@@ -58,25 +58,73 @@
             "scaleInDock": 1
         },
         "tiles/second.tmx": {
-            "scale": 1.5,
+            "scale": 1,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": -181.66666666666669,
-                "y": 251.66666666666669
+                "x": -289.5,
+                "y": 360.5
             }
         },
         "tiles/tutorial.tmx": {
-            "scale": 1.5,
+            "scale": 0.5,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 293,
+                "y": 475
+            }
+        },
+        "tiles/tutorial_1.tmx": {
+            "scale": 0.5,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 258.3333333333333,
-                "y": 259.6666666666667
+                "x": -149,
+                "y": 211
+            }
+        },
+        "tiles/tutorial_2.tmx": {
+            "scale": 0.75,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 515.3333333333334,
+                "y": 518
+            }
+        },
+        "tiles/tutorial_3.tmx": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": -3.5,
+                "y": 338.5
+            }
+        },
+        "tiles/tutorial_4.tmx": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": -141.5,
+                "y": 5.5
+            }
+        },
+        "tiles/tutorial_5.tmx": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 316.5,
+                "y": 367.5
+            }
+        },
+        "tiles/tutorial_6.tmx": {
+            "scale": 0.5,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 1169,
+                "y": 159
             }
         }
     },
     "last.worldFilePath": "C:/Users/asgalex/Documents/Projects/Rust/bevy_ecs_tiled/assets/worlds",
     "loadedWorlds": [
-        "C:/Users/asgalex/Documents/Projects/Rust/bevy_ecs_tiled/assets/worlds/orthogonal.world",
+        "//wsl.localhost/Debian/home/asgalex/bevy_learn/assets/tiles/learn.world",
         "C:/Users/asgalex/Documents/Projects/Rust/bevy_learn/assets/tiles/learn.world"
     ],
     "map.fixedSize": false,
@@ -85,16 +133,21 @@
     "map.tileHeight": 8,
     "map.tileWidth": 8,
     "openFiles": [
-        "C:/Users/asgalex/Documents/Projects/Rust/bevy_ecs_tiled/assets/worlds/orthogonal/world_map001.tmx"
+        "tiles/tutorial.tmx"
     ],
     "project": "learn.tiled-project",
     "recentFiles": [
+        "tiles/tutorial.tmx",
+        "tiles/tutorial_6.tmx",
+        "tiles/tutorial_5.tmx",
+        "tiles/tutorial_4.tmx",
+        "tiles/tutorial_3.tmx",
+        "tiles/tutorial_2.tmx",
+        "tiles/tutorial_1.tmx",
+        "tiles/second.tmx",
         "C:/Users/asgalex/Documents/Projects/Rust/bevy_ecs_tiled/assets/worlds/orthogonal/world_map001.tmx",
         "C:/Users/asgalex/Documents/Projects/Rust/bevy_ecs_tiled/assets/tiles/orthogonal_1.tsx",
-        "tiles/tutorial.tmx",
-        "tiles/second.tmx",
         "C:/Users/asgalex/Documents/Projects/Rust/bevy_ecs_tiled/assets/maps/orthogonal/multiple_layers_with_colliders.tmx",
-        "tiles/bricks.tsx",
-        "C:/Users/asgalex/Documents/Projects/flutter-projects/tank_game/assets/tiles/tutorial.tmx"
+        "tiles/bricks.tsx"
     ]
 }

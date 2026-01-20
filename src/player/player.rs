@@ -1,4 +1,4 @@
-use crate::GameLayer;
+use crate::{GameLayer, tile_destructor::destructor::TileDestructor};
 use avian2d::prelude::{
     Collider, CollidingEntities, CollisionEventsEnabled, CollisionLayers, RigidBody,
 };
@@ -68,11 +68,14 @@ pub fn spawn_player(
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
 ) {
-    commands.spawn(PlayerBundle::new(
-        &mut meshes,
-        &mut materials,
-        0.0,
-        0.0,
-        -150.0,
-    ));
+    let id = commands
+        .spawn(PlayerBundle::new(
+            &mut meshes,
+            &mut materials,
+            0.0,
+            0.0,
+            -150.0,
+        ))
+        .id();
+    commands.entity(id).insert(TileDestructor);
 }
