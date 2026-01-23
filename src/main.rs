@@ -1,6 +1,7 @@
 mod controls;
 mod objects;
 mod player;
+mod shoot;
 mod tile_destructor;
 
 use crate::controls::{
@@ -9,6 +10,7 @@ use crate::controls::{
 };
 use crate::objects::{GameObject, ObjectsCounter};
 use crate::player::{player_animation_controller, spawn_player};
+use crate::shoot::ShootingPlugin;
 use crate::tile_destructor::TileDestructorPlugin;
 use crate::tile_destructor::destructor::AffectedByDestructor;
 use avian2d::prelude::*;
@@ -41,6 +43,7 @@ fn main() {
         // .add_plugins(WorldInspectorPlugin::new())
         .add_plugins(SpritesheetAnimationPlugin)
         .add_plugins(TileDestructorPlugin)
+        .add_plugins(ShootingPlugin)
         .insert_resource(Gravity(Vec2::default()))
         .insert_resource(ObjectsCounter::new())
         .insert_resource(LastMoveDir::default())
