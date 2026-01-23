@@ -10,6 +10,7 @@ avian2d = { version = "0.4", default-features = true, features = ["simd"] }
 # bevy_ecs_tiled = { version = "0.10", features = ["avian", "debug"], path = "../bevy_ecs_tiled" }
 bevy_ecs_tiled = { path = "../bevy_ecs_tiled", features = ["avian", "debug"] }
 bevy-inspector-egui = "0.35.0"
+bevy_spritesheet_animation = "5.1.0"
 
 # Enable a small amount of optimization in the dev profile.
 [profile.dev]

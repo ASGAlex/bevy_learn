@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "tiles/tutorial.tmx",
+    "activeFile": "tiles/tank.tsx",
     "expandedProjectPaths": [
     ],
     "file.lastUsedOpenFilter": "Все файлы (*)",
@@ -48,7 +48,7 @@
         },
         "tiles/bricks.tsx": {
             "scaleInDock": 5.5,
-            "scaleInEditor": 1
+            "scaleInEditor": 16
         },
         "tiles/ground.tsx": {
             "scaleInDock": 5.5
@@ -65,12 +65,16 @@
                 "y": 360.5
             }
         },
+        "tiles/tank.tsx": {
+            "scaleInDock": 8,
+            "scaleInEditor": 11
+        },
         "tiles/tutorial.tmx": {
-            "scale": 0.5,
-            "selectedLayer": 2,
+            "scale": 1.5,
+            "selectedLayer": 3,
             "viewCenter": {
-                "x": 293,
-                "y": 475
+                "x": 123.66666666666663,
+                "y": 408.99999999999994
             }
         },
         "tiles/tutorial_1.tmx": {
@@ -122,6 +126,7 @@
             }
         }
     },
+    "last.externalTilesetPath": "//wsl.localhost/Debian/home/asgalex/bevy_learn/assets/tiles",
     "last.worldFilePath": "C:/Users/asgalex/Documents/Projects/Rust/bevy_ecs_tiled/assets/worlds",
     "loadedWorlds": [
         "//wsl.localhost/Debian/home/asgalex/bevy_learn/assets/tiles/learn.world",
@@ -133,11 +138,16 @@
     "map.tileHeight": 8,
     "map.tileWidth": 8,
     "openFiles": [
-        "tiles/tutorial.tmx"
+        "tiles/tutorial.tmx",
+        "tiles/bricks.tsx",
+        "tiles/tank.tsx"
     ],
     "project": "learn.tiled-project",
+    "property.type": "object",
     "recentFiles": [
         "tiles/tutorial.tmx",
+        "tiles/bricks.tsx",
+        "tiles/tank.tsx",
         "tiles/tutorial_6.tmx",
         "tiles/tutorial_5.tmx",
         "tiles/tutorial_4.tmx",
@@ -146,8 +156,7 @@
         "tiles/tutorial_1.tmx",
         "tiles/second.tmx",
         "C:/Users/asgalex/Documents/Projects/Rust/bevy_ecs_tiled/assets/worlds/orthogonal/world_map001.tmx",
-        "C:/Users/asgalex/Documents/Projects/Rust/bevy_ecs_tiled/assets/tiles/orthogonal_1.tsx",
-        "C:/Users/asgalex/Documents/Projects/Rust/bevy_ecs_tiled/assets/maps/orthogonal/multiple_layers_with_colliders.tmx",
-        "tiles/bricks.tsx"
-    ]
+        "C:/Users/asgalex/Documents/Projects/Rust/bevy_ecs_tiled/assets/tiles/orthogonal_1.tsx"
+    ],
+    "tileset.lastUsedFilter": "Файлы набора тайлов Tiled (*.tsx *.xml)"
 }

@@ -14,6 +14,7 @@ pub struct TileDestructor;
 pub struct AffectedByDestructor;
 
 #[allow(dead_code)]
+#[allow(clippy::too_many_arguments)]
 pub fn destructor_remove_tiles(
     mut commands: Commands,
     q_destructor: Query<Entity, With<TileDestructor>>,

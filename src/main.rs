@@ -3,21 +3,25 @@ mod objects;
 mod player;
 mod tile_destructor;
 
-use crate::controls::{LastMoveDir, move_player, update_camera, zoom};
+use crate::controls::{
+    LastMoveDir, PlayerLookDir, PlayerMoving, apply_player_look_dir, move_player, update_camera,
+    zoom,
+};
 use crate::objects::{GameObject, ObjectsCounter};
-use crate::player::spawn_player;
+use crate::player::{player_animation_controller, spawn_player};
 use crate::tile_destructor::TileDestructorPlugin;
 use crate::tile_destructor::destructor::AffectedByDestructor;
 use avian2d::prelude::*;
 use bevy::prelude::*;
 use bevy_ecs_tiled::prelude::tiled::PropertyValue;
 use bevy_ecs_tiled::prelude::*;
+use bevy_spritesheet_animation::plugin::SpritesheetAnimationPlugin;
 
 /// How quickly should the camera snap to the desired location.
-const CAMERA_DECAY_RATE: f32 = 2.;
+const CAMERA_DECAY_RATE: f32 = 40.;
 
 /// Player movement speed factor.
-const PLAYER_SPEED: f32 = 100.;
+const PLAYER_SPEED: f32 = 50.;
 
 #[derive(Component)]
 struct MainCamera;
@@ -35,12 +39,25 @@ fn main() {
         ))
         // .add_plugins(EguiPlugin::default())
         // .add_plugins(WorldInspectorPlugin::new())
+        .add_plugins(SpritesheetAnimationPlugin)
         .add_plugins(TileDestructorPlugin)
         .insert_resource(Gravity(Vec2::default()))
         .insert_resource(ObjectsCounter::new())
         .insert_resource(LastMoveDir::default())
-        .add_systems(Startup, (init, spawn_player).chain())
-        .add_systems(Update, (zoom, update_camera, move_player))
+        .init_resource::<PlayerLookDir>()
+        .init_resource::<PlayerMoving>()
+        .add_systems(Startup, (init).chain())
+        .add_systems(
+            Update,
+            (
+                spawn_player,
+                zoom,
+                update_camera,
+                move_player,
+                apply_player_look_dir.after(move_player),
+                player_animation_controller.after(move_player),
+            ),
+        )
         .run();
 }
 
