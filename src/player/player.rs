@@ -1,12 +1,19 @@
 use std::sync::Arc;
 
-use crate::{GameLayer, controls::PlayerMoving, tile_destructor::destructor::TileDestructor};
+use crate::{
+    GameLayer,
+    controls::{PlayerMoving, VisualPosition},
+    tile_destructor::destructor::TileDestructor,
+};
 use avian2d::prelude::{
     AngularDamping, Collider, CollidingEntities, CollisionEventsEnabled, CollisionLayers,
-    LinearDamping, LockedAxes, RigidBody,
+    LinearDamping, LockedAxes, MaxLinearSpeed, RigidBody,
 };
 use bevy::prelude::*;
-use bevy_ecs_tiled::prelude::{tiled::Tileset, *};
+use bevy_ecs_tiled::prelude::{
+    tiled::{Error, Result, Tileset},
+    *,
+};
 use bevy_spritesheet_animation::prelude::{Animation, Spritesheet, SpritesheetAnimation};
 
 #[derive(Component)]
@@ -123,7 +130,15 @@ pub fn spawn_player(
         return;
     };
 
-    let spritesheet = Spritesheet::new(handle, tileset.columns as usize, 6);
+    let rows = calculate_rows(
+        &tileset.image,
+        tileset.tile_height,
+        tileset.margin,
+        tileset.spacing,
+    )
+    .unwrap();
+
+    let spritesheet = Spritesheet::new(handle, tileset.columns as usize, rows as usize);
     let sprite = spritesheet
         .with_loaded_image(&images)
         .expect("")
@@ -147,9 +162,25 @@ pub fn spawn_player(
     commands.entity(id).insert((
         sprite,
         SpritesheetAnimation::new(animation_handle),
-        LinearDamping(0.0),
+        LinearDamping(10.0),
         AngularDamping(0.0),
+        VisualPosition::new(),
+        MaxLinearSpeed(50.0),
     ));
+}
+
+fn calculate_rows(
+    image: &Option<bevy_ecs_tiled::prelude::tiled::Image>,
+    tile_height: u32,
+    margin: u32,
+    spacing: u32,
+) -> Result<u32> {
+    image
+        .as_ref()
+        .map(|image| (image.height as u32 - margin + spacing) / (tile_height + spacing))
+        .ok_or_else(|| {
+            Error::MalformedAttributes("No <image> nor rows attribute in <tileset>".to_string())
+        })
 }
 
 pub fn player_animation_controller(

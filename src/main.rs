@@ -4,8 +4,8 @@ mod player;
 mod tile_destructor;
 
 use crate::controls::{
-    LastMoveDir, PlayerLookDir, PlayerMoving, apply_player_look_dir, move_player, update_camera,
-    zoom,
+    LastMoveDir, PlayerLookDir, PlayerMoving, apply_player_look_dir, interpolate_player_position,
+    move_player, update_camera, zoom,
 };
 use crate::objects::{GameObject, ObjectsCounter};
 use crate::player::{player_animation_controller, spawn_player};
@@ -18,7 +18,7 @@ use bevy_ecs_tiled::prelude::*;
 use bevy_spritesheet_animation::plugin::SpritesheetAnimationPlugin;
 
 /// How quickly should the camera snap to the desired location.
-const CAMERA_DECAY_RATE: f32 = 40.;
+const CAMERA_DECAY_RATE: f32 = 1.;
 
 /// Player movement speed factor.
 const PLAYER_SPEED: f32 = 50.;
@@ -47,17 +47,17 @@ fn main() {
         .init_resource::<PlayerLookDir>()
         .init_resource::<PlayerMoving>()
         .add_systems(Startup, (init).chain())
+        .add_systems(Update, (spawn_player, zoom))
         .add_systems(
-            Update,
+            FixedUpdate,
             (
-                spawn_player,
-                zoom,
-                update_camera,
                 move_player,
+                interpolate_player_position,
                 apply_player_look_dir.after(move_player),
                 player_animation_controller.after(move_player),
             ),
         )
+        .add_systems(PostUpdate, update_camera)
         .run();
 }
 

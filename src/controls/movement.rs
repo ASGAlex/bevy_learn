@@ -47,16 +47,16 @@ pub fn move_player(
     mut moving: ResMut<PlayerMoving>,
 ) {
     // обновляем направление только по just_pressed (последняя клавиша важнее)
-    if kb_input.just_pressed(KeyCode::KeyW) {
+    if kb_input.pressed(KeyCode::KeyW) {
         last_dir.0 = Some(Vec2::Y);
     }
-    if kb_input.just_pressed(KeyCode::KeyS) {
+    if kb_input.pressed(KeyCode::KeyS) {
         last_dir.0 = Some(-Vec2::Y);
     }
-    if kb_input.just_pressed(KeyCode::KeyA) {
+    if kb_input.pressed(KeyCode::KeyA) {
         last_dir.0 = Some(-Vec2::X);
     }
-    if kb_input.just_pressed(KeyCode::KeyD) {
+    if kb_input.pressed(KeyCode::KeyD) {
         last_dir.0 = Some(Vec2::X);
     }
 
