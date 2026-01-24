@@ -1,18 +1,12 @@
-mod controls;
-mod objects;
-mod player;
-mod shoot;
-mod tile_destructor;
+mod game;
+mod utils;
 
-use crate::controls::{
-    LastMoveDir, PlayerLookDir, PlayerMoving, apply_player_look_dir, interpolate_player_position,
-    move_player, update_camera, zoom,
-};
-use crate::objects::{GameObject, ObjectsCounter};
-use crate::player::{player_animation_controller, spawn_player};
-use crate::shoot::ShootingPlugin;
-use crate::tile_destructor::TileDestructorPlugin;
-use crate::tile_destructor::destructor::AffectedByDestructor;
+use crate::game::actors::movement::*;
+use crate::game::actors::player::*;
+use crate::game::weapons::bullet::*;
+use crate::utils::camera::*;
+use crate::utils::destructor::*;
+use crate::utils::pool::*;
 use avian2d::prelude::*;
 use bevy::prelude::*;
 use bevy_ecs_tiled::prelude::tiled::PropertyValue;
@@ -44,13 +38,16 @@ fn main() {
         .add_plugins(SpritesheetAnimationPlugin)
         .add_plugins(TileDestructorPlugin)
         .add_plugins(ShootingPlugin)
+        .add_plugins(PoolPlugin::<Bullet>::default())
         .insert_resource(Gravity(Vec2::default()))
-        .insert_resource(ObjectsCounter::new())
         .insert_resource(LastMoveDir::default())
         .init_resource::<PlayerLookDir>()
         .init_resource::<PlayerMoving>()
-        .add_systems(Startup, (init).chain())
-        .add_systems(Update, (spawn_player, zoom))
+        .add_systems(Startup, (init, setup_bullets).chain())
+        .add_systems(
+            Update,
+            (spawn_player, zoom, shoot_system, bullet_lifetime_system),
+        )
         .add_systems(
             FixedUpdate,
             (
@@ -64,22 +61,8 @@ fn main() {
         .run();
 }
 
-fn init(
-    mut commands: Commands,
-    mut counter: ResMut<ObjectsCounter>,
-    asset_server: Res<AssetServer>,
-) {
+fn init(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn((Camera2d, MainCamera));
-
-    commands.spawn(GameObject::new(&mut counter));
-    commands.spawn(GameObject::new(&mut counter));
-    commands.spawn(GameObject::new(&mut counter));
-    commands.spawn(GameObject::new(&mut counter));
-    commands.spawn(GameObject::new(&mut counter));
-    commands.spawn(GameObject::new(&mut counter));
-    commands.spawn(GameObject::new(&mut counter));
-    commands.spawn(GameObject::new(&mut counter));
-    commands.spawn(GameObject::new(&mut counter));
 
     commands.spawn((
         Text::new("Move the light with WASD.\nThe camera will smoothly track the light."),
@@ -111,7 +94,6 @@ fn init(
                     match collider_created.event().get_layer(&assets) {
                         None => {}
                         Some(data) => {
-                            dbg!(&data.name);
                             if data.name == "trees" {
                                 entity_commands.insert(Sensor).insert(Tree).insert(
                                     CollisionLayers::new(GameLayer::Trees, [GameLayer::Player]),
@@ -136,9 +118,6 @@ fn init(
             |tile_created: On<TiledEvent<TileCreated>>,
              assets: Res<Assets<TiledMapAsset>>,
              mut commands: Commands| {
-                // dbg!(tile_created.event().g daet_tile_entity());
-                // dbg!(tile_created.event().get_tile(&assets).unwrap());
-
                 match tile_created.event().get_tile(&assets) {
                     None => {}
                     Some(tile) => match tile.properties.get("name") {

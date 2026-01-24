@@ -1,9 +1,19 @@
 use avian2d::prelude::*;
+use bevy::app::{Plugin, Update};
 use bevy::ecs::relationship::Relationship;
 use bevy::prelude::*;
 use bevy_ecs_tiled::physics::RemovedTilesStorage;
 use bevy_ecs_tiled::prelude::*;
 use bevy_ecs_tiled::tiled::event::TilemapUpdatedMarker;
+
+#[derive(Default)]
+pub struct TileDestructorPlugin;
+
+impl Plugin for TileDestructorPlugin {
+    fn build(&self, app: &mut bevy::prelude::App) {
+        app.add_systems(Update, destructor_remove_tiles);
+    }
+}
 
 #[allow(dead_code)]
 #[derive(Component)]
@@ -103,7 +113,6 @@ pub fn destructor_remove_tiles(
                             else {
                                 continue;
                             };
-                            dbg!(layer_id);
                             removed_tiles.add_tile(map_asset, layer_id, &pos);
                         }
                     }

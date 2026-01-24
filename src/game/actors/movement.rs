@@ -1,12 +1,11 @@
 use crate::PLAYER_SPEED;
-use crate::player::player::Player;
+use crate::game::actors::player::Player;
 use avian2d::prelude::LinearVelocity;
 use bevy::ecs::resource::Resource;
 use bevy::ecs::system::ResMut;
 use bevy::input::ButtonInput;
 use bevy::math::{Quat, Vec2};
 use bevy::prelude::{KeyCode, Query, Res, With};
-use bevy::sprite::Sprite;
 use bevy::transform::components::Transform;
 
 #[derive(Resource, Default, Clone, Copy, PartialEq, Eq)]

@@ -1,11 +1,11 @@
-use crate::player::player::Player;
+use crate::game::actors::player::Player;
 use crate::{CAMERA_DECAY_RATE, MainCamera};
 use bevy::camera::{Camera2d, Projection};
 use bevy::ecs::component::Component;
 use bevy::ecs::system::Query;
 use bevy::input::mouse::AccumulatedMouseScroll;
 use bevy::math::Vec3;
-use bevy::prelude::{Res, Single, StableInterpolate, Time, Transform, With, Without};
+use bevy::prelude::{Res, Single, StableInterpolate, Time, Transform, With};
 
 pub fn update_camera(
     mut camera: Single<&mut Transform, (With<Camera2d>, With<MainCamera>)>,

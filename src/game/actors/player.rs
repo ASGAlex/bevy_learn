@@ -2,8 +2,8 @@ use std::sync::Arc;
 
 use crate::{
     GameLayer,
-    controls::{PlayerMoving, VisualPosition},
-    tile_destructor::destructor::TileDestructor,
+    game::actors::movement::PlayerMoving,
+    utils::{camera::VisualPosition, destructor::TileDestructor},
 };
 use avian2d::prelude::{
     AngularDamping, Collider, CollidingEntities, CollisionEventsEnabled, CollisionLayers,
