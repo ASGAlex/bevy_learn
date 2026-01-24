@@ -6,7 +6,7 @@ use crate::{
         movement::{LookDir, PlayerLookDir},
         player::Player,
     },
-    utils::pool::*,
+    utils::{destructor::TileDestructor, pool::*},
 };
 pub struct ShootingPlugin;
 
@@ -48,6 +48,7 @@ pub fn shoot_system(
         commands.entity(entity).insert((
             Transform::from_translation(player_q.translation + spawn_offset),
             LinearVelocity(dir_vec * 100.0),
+            TileDestructor,
             BulletData {
                 traveled: 0.0,
                 max_distance: 800.0,
@@ -67,7 +68,10 @@ pub fn bullet_lifetime_system(
 
         if bullet.traveled >= bullet.max_distance {
             deactivate_to_pool::<Bullet>(&mut commands, &mut pool, entity, |entity, commands| {
-                commands.entity(entity).insert(LinearVelocity(Vec2::ZERO));
+                commands
+                    .entity(entity)
+                    .insert(LinearVelocity(Vec2::ZERO))
+                    .remove::<TileDestructor>();
             });
         }
     }
