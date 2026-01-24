@@ -11,7 +11,7 @@ pub struct TileDestructorPlugin;
 
 impl Plugin for TileDestructorPlugin {
     fn build(&self, app: &mut bevy::prelude::App) {
-        app.add_systems(Update, destructor_remove_tiles);
+        app.add_systems(FixedUpdate, destructor_remove_tiles);
     }
 }
 
@@ -25,7 +25,7 @@ pub struct AffectedByDestructor;
 
 #[allow(dead_code)]
 #[allow(clippy::too_many_arguments)]
-pub fn destructor_remove_tiles(
+fn destructor_remove_tiles(
     mut commands: Commands,
     q_destructor: Query<Entity, With<TileDestructor>>,
     q_maps: Query<(&TiledMap, &TiledMapStorage), Without<RespawnTiledMap>>,
@@ -130,7 +130,7 @@ pub fn destructor_remove_tiles(
     }
 }
 
-pub fn get_tile_pos_from_world_pos(
+fn get_tile_pos_from_world_pos(
     transform: GlobalTransform,
     world_point: Vec2,
     size: TilemapSize,

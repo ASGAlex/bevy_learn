@@ -43,14 +43,12 @@ fn main() {
         .insert_resource(LastMoveDir::default())
         .init_resource::<PlayerLookDir>()
         .init_resource::<PlayerMoving>()
-        .add_systems(Startup, (init, setup_bullets).chain())
-        .add_systems(
-            Update,
-            (spawn_player, zoom, shoot_system, bullet_lifetime_system),
-        )
+        .add_systems(Startup, (init).chain())
         .add_systems(
             FixedUpdate,
             (
+                spawn_player,
+                zoom,
                 move_player,
                 interpolate_player_position,
                 apply_player_look_dir.after(move_player),

@@ -1,7 +1,11 @@
-use avian2d::prelude::{Collider, LinearVelocity, RigidBody};
+use avian2d::prelude::{
+    AngularDamping, Collider, ColliderDisabled, CollisionLayers, Collisions, LinearDamping,
+    LinearVelocity, LockedAxes, MaxLinearSpeed, RigidBody, RigidBodyDisabled,
+};
 use bevy::prelude::*;
 
 use crate::{
+    GameLayer,
     game::actors::{
         movement::{LookDir, PlayerLookDir},
         player::Player,
@@ -12,8 +16,8 @@ pub struct ShootingPlugin;
 
 impl Plugin for ShootingPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Update, shoot_system)
-            .add_systems(Update, bullet_lifetime_system);
+        app.add_systems(FixedUpdate, (shoot_system, bullet_lifetime_system))
+            .add_systems(Startup, setup_bullets);
     }
 }
 
@@ -45,15 +49,19 @@ pub fn shoot_system(
     let spawn_offset = bullet_spawn_offset(dir, PLAYER_SIZE);
 
     activate_from_pool::<Bullet>(&mut commands, &mut pool, |entity, commands| {
-        commands.entity(entity).insert((
-            Transform::from_translation(player_q.translation + spawn_offset),
-            LinearVelocity(dir_vec * 100.0),
-            TileDestructor,
-            BulletData {
-                traveled: 0.0,
-                max_distance: 800.0,
-            },
-        ));
+        commands
+            .entity(entity)
+            .insert((
+                Transform::from_translation(player_q.translation + spawn_offset),
+                LinearVelocity(dir_vec * 100.0),
+                TileDestructor,
+                BulletData {
+                    traveled: 0.0,
+                    max_distance: 800.0,
+                },
+            ))
+            .remove::<ColliderDisabled>()
+            .remove::<RigidBodyDisabled>();
     });
 }
 
@@ -61,16 +69,24 @@ pub fn bullet_lifetime_system(
     mut commands: Commands,
     time: Res<Time>,
     mut bullets: Query<(Entity, &LinearVelocity, &mut BulletData), With<Active<Bullet>>>,
+    collisions: Collisions,
     mut pool: ResMut<Pool<Bullet>>,
 ) {
     for (entity, vel, mut bullet) in bullets.iter_mut() {
         bullet.traveled += vel.0.length() * time.delta_secs();
 
-        if bullet.traveled >= bullet.max_distance {
+        let should_be_removed = bullet.traveled >= bullet.max_distance
+            || collisions.collisions_with(entity).next().is_some();
+
+        if should_be_removed {
             deactivate_to_pool::<Bullet>(&mut commands, &mut pool, entity, |entity, commands| {
                 commands
                     .entity(entity)
-                    .insert(LinearVelocity(Vec2::ZERO))
+                    .insert((
+                        LinearVelocity(Vec2::ZERO),
+                        ColliderDisabled,
+                        RigidBodyDisabled,
+                    ))
                     .remove::<TileDestructor>();
             });
         }
@@ -99,8 +115,15 @@ pub fn setup_bullets(mut commands: Commands, mut pool: ResMut<Pool<Bullet>>) {
                 },
                 RigidBody::Dynamic,
                 LinearVelocity(Vec2::ZERO),
-                Collider::circle(2.0),
+                Collider::circle(4.0),
                 Bullet,
+                LockedAxes::ROTATION_LOCKED,
+                LinearDamping(10.0),
+                AngularDamping(0.0),
+                MaxLinearSpeed(10000.0),
+                RigidBodyDisabled,
+                ColliderDisabled,
+                CollisionLayers::new(GameLayer::Player, [GameLayer::Player, GameLayer::Bricks]),
                 BulletData {
                     traveled: 0.0,
                     max_distance: 0.0,

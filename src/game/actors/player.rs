@@ -69,8 +69,8 @@ pub fn spawn_player(
     mut commands: Commands,
     tiled_map_assets: Res<Assets<TiledMapAsset>>,
     existing_player: Option<Single<Entity, With<Player>>>,
-    animations: ResMut<Assets<Animation>>,
-    atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
+    mut animations: ResMut<Assets<Animation>>,
+    mut atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
     images: ResMut<Assets<Image>>,
 ) {
     if existing_player.is_some() {
@@ -89,7 +89,7 @@ pub fn spawn_player(
     };
 
     let id = commands.spawn(PlayerBundle::new(0.0, 0.0, -150.0)).id();
-    commands.entity(id).insert(TileDestructor);
+    //    commands.entity(id).insert(TileDestructor);
     commands.entity(id).insert((
         sprite,
         animation,

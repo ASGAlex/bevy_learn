@@ -1,9 +1,9 @@
 use bevy::prelude::*;
 use bevy_ecs_tiled::prelude::tiled::{Error, Result, Tileset};
 use bevy_ecs_tiled::prelude::*;
+use bevy_spritesheet_animation::prelude::{Animation, Spritesheet, SpritesheetAnimation};
 use std::sync::Arc;
 
-use bevy_spritesheet_animation::prelude::{Animation, Spritesheet, SpritesheetAnimation};
 pub fn read_sprite_animation_from_tileset(
     tileset_name: String, // tank
     tile_id: u32,         // 0
