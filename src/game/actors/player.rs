@@ -1,10 +1,6 @@
 use crate::{
-    GameLayer,
-    game::actors::movement::PlayerMoving,
-    utils::{
-        camera::VisualPosition, destructor::TileDestructor,
-        tileset_reader::read_sprite_animation_from_tileset,
-    },
+    GameLayer, game::actors::movement::PlayerMoving,
+    utils::tileset_reader::read_sprite_animation_from_tileset,
 };
 use avian2d::prelude::{
     AngularDamping, Collider, CollidingEntities, CollisionEventsEnabled, CollisionLayers,
@@ -95,7 +91,6 @@ pub fn spawn_player(
         animation,
         LinearDamping(10.0),
         AngularDamping(0.0),
-        VisualPosition::new(),
         //        MaxLinearSpeed(50.0),
     ));
 }

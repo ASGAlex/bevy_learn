@@ -1,20 +1,31 @@
+use crate::game::actors::movement::{LastMoveDir, PlayerLookDir};
 use crate::game::actors::player::Player;
 use crate::{CAMERA_DECAY_RATE, MainCamera};
 use bevy::camera::{Camera2d, Projection};
 use bevy::ecs::component::Component;
-use bevy::ecs::system::Query;
+use bevy::ecs::query::Without;
+use bevy::ecs::system::{Query, ResMut};
 use bevy::input::mouse::AccumulatedMouseScroll;
-use bevy::math::Vec3;
+use bevy::math::{Vec2, Vec3};
 use bevy::prelude::{Res, Single, StableInterpolate, Time, Transform, With};
+
+const LOOK_FORWARD_DISTANCE: f32 = 48.0;
 
 pub fn update_camera(
     mut camera: Single<&mut Transform, (With<Camera2d>, With<MainCamera>)>,
-    // player: Single<&Transform, (With<Player>, Without<Camera2d>)>,
+    player: Single<&Transform, (With<Player>, Without<Camera2d>)>,
     time: Res<Time>,
-    visual: Single<&VisualPosition, With<Player>>,
+    look_dir: Res<PlayerLookDir>,
+    //   transform: Single<&Transform, With<Player>>,
 ) {
-    let Vec3 { x, y, .. } = visual.get();
-    let direction = Vec3::new(x, y, camera.translation.z);
+    let target_point = match look_dir.0 {
+        Some(look_direction) => look_direction.to_vec3().mul_add(
+            Vec3::new(LOOK_FORWARD_DISTANCE, LOOK_FORWARD_DISTANCE, 0.0),
+            player.translation,
+        ),
+        None => player.translation,
+    };
+    let direction = Vec3::new(target_point.x, target_point.y, camera.translation.z);
 
     // Applies a smooth effect to camera movement using stable interpolation
     // between the camera position and the player position on the x and y axes.
@@ -37,35 +48,5 @@ pub fn zoom(
         let multiplicative_zoom = 1. + delta_zoom;
 
         orthographic.scale = (orthographic.scale * multiplicative_zoom).clamp(0.01, 100.0);
-    }
-}
-
-#[derive(Component)]
-pub struct VisualPosition(Vec3);
-
-impl VisualPosition {
-    pub fn new() -> Self {
-        VisualPosition(Vec3::ZERO)
-    }
-
-    pub fn set(&mut self, pos: Vec3) {
-        self.0 = pos;
-    }
-
-    pub fn get(&self) -> Vec3 {
-        self.0
-    }
-}
-
-pub fn interpolate_player_position(
-    mut query: Query<(&Transform, &mut VisualPosition), With<Player>>,
-    time: Res<Time>,
-) {
-    for (transform, mut visual) in &mut query {
-        // tweak factor под плавность
-        let lerp_factor = 12.0 * time.delta_secs();
-        visual.0 = visual
-            .0
-            .lerp(transform.translation, lerp_factor.clamp(0.0_f32, 1.0_f32));
     }
 }

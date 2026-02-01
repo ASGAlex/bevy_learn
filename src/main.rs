@@ -56,7 +56,7 @@ fn main() {
                 spawn_player,
                 zoom,
                 move_player,
-                interpolate_player_position,
+                // interpolate_player_position,
                 apply_player_look_dir.after(move_player),
                 player_animation_controller.after(move_player),
             ),

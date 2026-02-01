@@ -4,7 +4,7 @@ use avian2d::prelude::LinearVelocity;
 use bevy::ecs::resource::Resource;
 use bevy::ecs::system::ResMut;
 use bevy::input::ButtonInput;
-use bevy::math::{Quat, Vec2};
+use bevy::math::{Quat, Vec2, Vec3};
 use bevy::prelude::{KeyCode, Query, Res, With};
 use bevy::transform::components::Transform;
 
@@ -29,6 +29,10 @@ impl LookDir {
             LookDir::Left => -Vec2::X,
             LookDir::Right => Vec2::X,
         }
+    }
+    pub fn to_vec3(self) -> Vec3 {
+        let vec2 = self.to_vec2();
+        Vec3::new(vec2.x, vec2.y, 0.0)
     }
 }
 
