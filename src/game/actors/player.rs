@@ -89,14 +89,14 @@ pub fn spawn_player(
     };
 
     let id = commands.spawn(PlayerBundle::new(0.0, 0.0, -150.0)).id();
-    //    commands.entity(id).insert(TileDestructor);
+    //commands.entity(id).insert(TileDestructor::default());
     commands.entity(id).insert((
         sprite,
         animation,
         LinearDamping(10.0),
         AngularDamping(0.0),
         VisualPosition::new(),
-        MaxLinearSpeed(50.0),
+        //        MaxLinearSpeed(50.0),
     ));
 }
 

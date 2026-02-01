@@ -11,13 +11,16 @@ use avian2d::prelude::*;
 use bevy::prelude::*;
 use bevy_ecs_tiled::prelude::tiled::PropertyValue;
 use bevy_ecs_tiled::prelude::*;
+use bevy_inspector_egui::bevy_egui::EguiPlugin;
+use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy_spritesheet_animation::plugin::SpritesheetAnimationPlugin;
 
+const PHYSICS_SPEED: f32 = 0.3;
 /// How quickly should the camera snap to the desired location.
 const CAMERA_DECAY_RATE: f32 = 1.;
 
 /// Player movement speed factor.
-const PLAYER_SPEED: f32 = 50.;
+const PLAYER_SPEED: f32 = 50. / PHYSICS_SPEED;
 
 #[derive(Component)]
 struct MainCamera;
@@ -28,13 +31,16 @@ fn main() {
         .add_plugins(DefaultPlugins.build().set(ImagePlugin::default_nearest()))
         .add_plugins(TiledPlugin::default())
         .add_plugins((
-            PhysicsPlugins::default().with_length_unit(1.),
+            PhysicsPlugins::default()
+                .with_length_unit(1.)
+                .set(PhysicsInterpolationPlugin::interpolate_all()),
             TiledPhysicsPlugin::<TiledPhysicsAvianBackend>::default(),
-            // PhysicsDebugPlugin,
+            PhysicsDebugPlugin,
             // TiledDebugTilesPlugin::default(),
         ))
-        // .add_plugins(EguiPlugin::default())
-        // .add_plugins(WorldInspectorPlugin::new())
+        .insert_resource(Time::<Physics>::default().with_relative_speed(PHYSICS_SPEED))
+        .add_plugins(EguiPlugin::default())
+        .add_plugins(WorldInspectorPlugin::new())
         .add_plugins(SpritesheetAnimationPlugin)
         .add_plugins(TileDestructorPlugin)
         .add_plugins(ShootingPlugin)
@@ -60,7 +66,9 @@ fn main() {
 }
 
 fn init(mut commands: Commands, asset_server: Res<AssetServer>) {
-    commands.spawn((Camera2d, MainCamera));
+    let mut projection = OrthographicProjection::default_2d();
+    projection.scale = 0.3;
+    commands.spawn((Camera2d, Projection::Orthographic(projection), MainCamera));
 
     commands.spawn((
         Text::new("Move the light with WASD.\nThe camera will smoothly track the light."),

@@ -26,9 +26,10 @@ pub struct Inactive<T: Component>(pub PhantomData<T>);
 #[derive(Component)]
 pub struct Active<T: Component>(pub PhantomData<T>);
 
-#[derive(Resource)]
+#[derive(Resource, Reflect)]
 pub struct Pool<T: Component> {
     pub free: Vec<Entity>,
+    #[reflect(ignore)]
     _marker: PhantomData<T>,
 }
 
@@ -56,7 +57,7 @@ pub fn setup_pool<T: Component>(
 
         pool.free.push(e);
     }
-    dbg!("Pool size is:".to_string() + &pool.free.len().to_string());
+    // dbg!("Pool size is:".to_string() + &pool.free.len().to_string());
 }
 
 pub fn activate_from_pool<T: Component>(
@@ -68,7 +69,7 @@ pub fn activate_from_pool<T: Component>(
         return false;
     };
 
-    dbg!(("Activate: ", entity));
+    // dbg!(("Activate: ", entity));
     commands
         .entity(entity)
         .remove::<Inactive<T>>()

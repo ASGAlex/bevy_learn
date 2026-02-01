@@ -1,11 +1,12 @@
 use avian2d::prelude::{
-    AngularDamping, Collider, ColliderDisabled, CollisionLayers, Collisions, LinearDamping,
-    LinearVelocity, LockedAxes, MaxLinearSpeed, RigidBody, RigidBodyDisabled,
+    AngularDamping, Collider, ColliderDisabled, CollisionLayers, Collisions, Dominance,
+    LinearDamping, LinearVelocity, LockedAxes, MaxLinearSpeed, RigidBody, RigidBodyDisabled,
+    SpeculativeMargin, SweptCcd,
 };
 use bevy::prelude::*;
 
 use crate::{
-    GameLayer,
+    GameLayer, PHYSICS_SPEED,
     game::actors::{
         movement::{LookDir, PlayerLookDir},
         player::Player,
@@ -17,29 +18,46 @@ pub struct ShootingPlugin;
 impl Plugin for ShootingPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(FixedUpdate, (shoot_system, bullet_lifetime_system))
-            .add_systems(Startup, setup_bullets);
+            .add_systems(Startup, setup_bullets)
+            .init_resource::<ShootTimer>()
+            .register_type::<Pool<Bullet>>()
+            .register_type::<TileDestructor<Bullet>>();
     }
+}
+
+#[derive(Resource, Default)]
+struct ShootTimer {
+    last_shot: f32,
 }
 
 pub const PLAYER_SIZE: Vec2 = Vec2::new(14.0, 14.0);
 
-#[derive(Component)]
+#[derive(Component, Reflect)]
 pub struct Bullet;
 
-#[derive(Component)]
+#[derive(Component, Clone, Copy)]
 pub struct BulletData {
     pub traveled: f32,
     pub max_distance: f32,
+    pub parent: Option<Entity>,
 }
 
-pub fn shoot_system(
+fn shoot_system(
     mut commands: Commands,
     keyboard: Res<ButtonInput<KeyCode>>,
     look_dir: Res<PlayerLookDir>,
-    player_q: Single<&Transform, With<Player>>,
+    player_q: Single<(Entity, &Transform), With<Player>>,
     mut pool: ResMut<Pool<Bullet>>,
+    time: Res<Time>,
+    mut shoot_timer: ResMut<ShootTimer>,
 ) {
-    if !keyboard.just_pressed(KeyCode::Space) {
+    if !keyboard.pressed(KeyCode::Space) {
+        return;
+    }
+
+    let current_time = time.elapsed_secs();
+    let cooldown = 0.5;
+    if current_time - shoot_timer.last_shot < cooldown {
         return;
     }
 
@@ -49,19 +67,41 @@ pub fn shoot_system(
     let spawn_offset = bullet_spawn_offset(dir, PLAYER_SIZE);
 
     activate_from_pool::<Bullet>(&mut commands, &mut pool, |entity, commands| {
+        let (player_entity, transform) = player_q.into_inner();
+
         commands
             .entity(entity)
             .insert((
-                Transform::from_translation(player_q.translation + spawn_offset),
-                LinearVelocity(dir_vec * 100.0),
-                TileDestructor,
+                Transform::from_translation(transform.translation + spawn_offset),
+                LinearVelocity(dir_vec * 800.0),
+                TileDestructor::<Bullet> {
+                    remove_on_contact: true,
+                    vector: dir_vec,
+                    remove_fn: Some(bullet_remove_on_contact),
+                },
                 BulletData {
                     traveled: 0.0,
-                    max_distance: 800.0,
+                    max_distance: 800.0 / PHYSICS_SPEED,
+                    parent: Some(player_entity),
                 },
             ))
             .remove::<ColliderDisabled>()
             .remove::<RigidBodyDisabled>();
+    });
+
+    shoot_timer.last_shot = current_time;
+}
+
+fn bullet_remove_on_contact(commands: &mut Commands, bullet: Entity, pool: &mut Pool<Bullet>) {
+    deactivate_to_pool(commands, pool, bullet, |entity, commands| {
+        commands
+            .entity(entity)
+            .insert((
+                LinearVelocity(Vec2::ZERO),
+                ColliderDisabled,
+                RigidBodyDisabled,
+            ))
+            .remove::<TileDestructor<Bullet>>();
     });
 }
 
@@ -72,11 +112,22 @@ pub fn bullet_lifetime_system(
     collisions: Collisions,
     mut pool: ResMut<Pool<Bullet>>,
 ) {
+    // return;
+
     for (entity, vel, mut bullet) in bullets.iter_mut() {
         bullet.traveled += vel.0.length() * time.delta_secs();
 
-        let should_be_removed = bullet.traveled >= bullet.max_distance
-            || collisions.collisions_with(entity).next().is_some();
+        let mut should_be_removed = bullet.traveled >= bullet.max_distance;
+
+        if !should_be_removed {
+            for collision in collisions.collisions_with(entity) {
+                // Столкновение не с объектом, выпустившем пулю, а с чем-то ещё
+                if collision.body1 != bullet.parent && collision.body2 != bullet.parent {
+                    // should_be_removed = true;
+                    break;
+                }
+            }
+        }
 
         if should_be_removed {
             deactivate_to_pool::<Bullet>(&mut commands, &mut pool, entity, |entity, commands| {
@@ -87,7 +138,7 @@ pub fn bullet_lifetime_system(
                         ColliderDisabled,
                         RigidBodyDisabled,
                     ))
-                    .remove::<TileDestructor>();
+                    .remove::<TileDestructor<Bullet>>();
             });
         }
     }
@@ -105,7 +156,7 @@ fn bullet_spawn_offset(dir: LookDir, player_size: Vec2) -> Vec3 {
 }
 
 pub fn setup_bullets(mut commands: Commands, mut pool: ResMut<Pool<Bullet>>) {
-    setup_pool::<Bullet>(&mut commands, &mut pool, 128, |commands| {
+    setup_pool::<Bullet>(&mut commands, &mut pool, 2, |commands| {
         commands
             .spawn((
                 Sprite {
@@ -115,18 +166,22 @@ pub fn setup_bullets(mut commands: Commands, mut pool: ResMut<Pool<Bullet>>) {
                 },
                 RigidBody::Dynamic,
                 LinearVelocity(Vec2::ZERO),
-                Collider::circle(4.0),
+                Collider::rectangle(2.0, 2.0),
                 Bullet,
                 LockedAxes::ROTATION_LOCKED,
-                LinearDamping(10.0),
+                LinearDamping(0.0),
                 AngularDamping(0.0),
-                MaxLinearSpeed(10000.0),
+                // MaxLinearSpeed(10000.0),
                 RigidBodyDisabled,
                 ColliderDisabled,
+                SpeculativeMargin(1.0),
+                //SweptCcd::LINEAR,
+                Visibility::Hidden,
                 CollisionLayers::new(GameLayer::Player, [GameLayer::Player, GameLayer::Bricks]),
                 BulletData {
                     traveled: 0.0,
                     max_distance: 0.0,
+                    parent: None,
                 },
             ))
             .id()
