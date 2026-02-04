@@ -7,6 +7,8 @@ use crate::game::weapons::bullet::*;
 use crate::utils::camera::*;
 use crate::utils::destructor::*;
 use crate::utils::pool::*;
+use crate::utils::region_deactivation::RegionActivationPlugin;
+use crate::utils::region_deactivation::RegionAware;
 use avian2d::prelude::*;
 use bevy::prelude::*;
 use bevy_ecs_tiled::prelude::tiled::PropertyValue;
@@ -14,7 +16,7 @@ use bevy_ecs_tiled::prelude::*;
 use bevy_inspector_egui::bevy_egui::EguiPlugin;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy_spritesheet_animation::plugin::SpritesheetAnimationPlugin;
-
+const MAP_CHUNK_SIZE: f32 = 400.0;
 const PHYSICS_SPEED: f32 = 0.3;
 /// How quickly should the camera snap to the desired location.
 const CAMERA_DECAY_RATE: f32 = 1.;
@@ -44,8 +46,9 @@ fn main() {
         .add_plugins(SpritesheetAnimationPlugin)
         .add_plugins(TileDestructorPlugin)
         .add_plugins(ShootingPlugin)
+        .add_plugins(RegionActivationPlugin)
         .add_plugins(PoolPlugin::<Bullet>::default())
-        .insert_resource(Gravity(Vec2::default()))
+        .insert_resource(Gravity(Vec2::ZERO))
         .insert_resource(LastMoveDir::default())
         .init_resource::<PlayerLookDir>()
         .init_resource::<PlayerMoving>()
@@ -84,7 +87,7 @@ fn init(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands
         .spawn((
             TiledWorld(asset_server.load("tiles/learn.world")),
-            TiledWorldChunking::new(200., 200.),
+            TiledWorldChunking::new(MAP_CHUNK_SIZE, MAP_CHUNK_SIZE),
             TiledPhysicsSettings::<TiledPhysicsAvianBackend> {
                 backend: TiledPhysicsAvianBackend::Polyline,
                 ..default()

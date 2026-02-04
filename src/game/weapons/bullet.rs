@@ -1,17 +1,17 @@
 use avian2d::prelude::{
     AngularDamping, Collider, ColliderDisabled, CollisionLayers, Collisions, Dominance,
     LinearDamping, LinearVelocity, LockedAxes, MaxLinearSpeed, RigidBody, RigidBodyDisabled,
-    SpeculativeMargin, SweptCcd,
+    SleepBody, Sleeping, SpeculativeMargin, SweptCcd,
 };
 use bevy::prelude::*;
 
 use crate::{
-    GameLayer, PHYSICS_SPEED,
+    GameLayer, MAP_CHUNK_SIZE, MainCamera, PHYSICS_SPEED,
     game::actors::{
         movement::{LookDir, PlayerLookDir},
         player::Player,
     },
-    utils::{destructor::TileDestructor, pool::*},
+    utils::{destructor::TileDestructor, pool::*, region_deactivation::RegionAware},
 };
 pub struct ShootingPlugin;
 
@@ -81,7 +81,7 @@ fn shoot_system(
                 },
                 BulletData {
                     traveled: 0.0,
-                    max_distance: 800.0 / PHYSICS_SPEED,
+                    max_distance: 1000.0 / PHYSICS_SPEED,
                     parent: Some(player_entity),
                 },
             ))
@@ -108,16 +108,18 @@ fn bullet_remove_on_contact(commands: &mut Commands, bullet: Entity, pool: &mut 
 pub fn bullet_lifetime_system(
     mut commands: Commands,
     time: Res<Time>,
-    mut bullets: Query<(Entity, &LinearVelocity, &mut BulletData), With<Active<Bullet>>>,
+    camera: Single<&Transform, (With<Camera2d>, With<MainCamera>)>,
+    mut bullets: Query<
+        (Entity, &LinearVelocity, &Transform, &mut BulletData),
+        (With<Active<Bullet>>, Without<Sleeping>),
+    >,
     collisions: Collisions,
     mut pool: ResMut<Pool<Bullet>>,
 ) {
-    // return;
-
-    for (entity, vel, mut bullet) in bullets.iter_mut() {
+    for (entity, vel, bullet_transform, mut bullet) in bullets.iter_mut() {
         bullet.traveled += vel.0.length() * time.delta_secs();
 
-        let mut should_be_removed = bullet.traveled >= bullet.max_distance;
+        let should_be_removed = bullet.traveled >= bullet.max_distance;
 
         if !should_be_removed {
             for collision in collisions.collisions_with(entity) {
@@ -140,6 +142,17 @@ pub fn bullet_lifetime_system(
                     ))
                     .remove::<TileDestructor<Bullet>>();
             });
+        } else {
+            // let diff = (camera.translation - bullet_transform.translation).abs();
+            // if diff.x >= MAP_CHUNK_SIZE || diff.y >= MAP_CHUNK_SIZE {
+            //     commands.entity(entity).insert((
+            //         RigidBodyDisabled,
+            //         ColliderDisabled,
+            //         Visibility::Hidden,
+            //     ));
+            //     commands.queue(SleepBody(entity));
+            //     dbg!("!!!!!!!!!!!!! SLEEP");
+            // }
         }
     }
 }
@@ -176,6 +189,7 @@ pub fn setup_bullets(mut commands: Commands, mut pool: ResMut<Pool<Bullet>>) {
                 ColliderDisabled,
                 SpeculativeMargin(1.0),
                 //SweptCcd::LINEAR,
+                RegionAware,
                 Visibility::Hidden,
                 CollisionLayers::new(GameLayer::Player, [GameLayer::Player, GameLayer::Bricks]),
                 BulletData {
