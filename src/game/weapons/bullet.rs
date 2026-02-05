@@ -1,12 +1,11 @@
 use avian2d::prelude::{
-    AngularDamping, Collider, ColliderDisabled, CollisionLayers, Collisions, Dominance,
-    LinearDamping, LinearVelocity, LockedAxes, MaxLinearSpeed, RigidBody, RigidBodyDisabled,
-    SleepBody, Sleeping, SpeculativeMargin, SweptCcd,
+    AngularDamping, Collider, ColliderDisabled, CollisionLayers, Collisions, LinearDamping,
+    LinearVelocity, LockedAxes, RigidBody, RigidBodyDisabled, Sleeping, SpeculativeMargin,
 };
-use bevy::{prelude::*, window::NormalizedWindowRef};
+use bevy::prelude::*;
 
 use crate::{
-    GameLayer, MAP_CHUNK_SIZE, MainCamera, PHYSICS_SPEED,
+    GameLayer, MainCamera, PHYSICS_SPEED,
     game::actors::{
         movement::{LookDir, PlayerLookDir},
         player::Player,

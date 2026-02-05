@@ -1,5 +1,7 @@
+use std::time::Duration;
+
 use avian2d::prelude::*;
-use bevy::prelude::*;
+use bevy::{prelude::*, time::common_conditions::on_timer};
 
 use crate::{MAP_CHUNK_SIZE, game::actors::player::Player};
 pub struct RegionActivationPlugin;
@@ -7,8 +9,12 @@ pub struct RegionActivationPlugin;
 impl Plugin for RegionActivationPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(
-            FixedUpdate,
-            (region_deactivate_system, region_activate_system),
+            Update,
+            (
+                region_deactivate_system.run_if(on_timer(Duration::from_secs_f32(5.0))),
+                region_activate_system.run_if(on_timer(Duration::from_secs_f32(3.0))),
+            )
+                .chain(),
         );
     }
 }

@@ -130,12 +130,12 @@ fn destructor_remove_tiles(
                                 None => continue,
                             };
 
-                            dbg!((
-                                pos,
-                                destructor_config.vector,
-                                point.point,
-                                penteration_point
-                            ));
+                            // dbg!((
+                            //     pos,
+                            //     destructor_config.vector,
+                            //     point.point,
+                            //     penteration_point
+                            // ));
 
                             if let Some(tile_entity) = storage.get(&pos) {
                                 commands.entity(tile_entity).despawn();
