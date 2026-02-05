@@ -3,7 +3,7 @@ use avian2d::prelude::{
     LinearDamping, LinearVelocity, LockedAxes, MaxLinearSpeed, RigidBody, RigidBodyDisabled,
     SleepBody, Sleeping, SpeculativeMargin, SweptCcd,
 };
-use bevy::prelude::*;
+use bevy::{prelude::*, window::NormalizedWindowRef};
 
 use crate::{
     GameLayer, MAP_CHUNK_SIZE, MainCamera, PHYSICS_SPEED,
@@ -18,7 +18,7 @@ pub struct ShootingPlugin;
 impl Plugin for ShootingPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(FixedUpdate, (shoot_system, bullet_lifetime_system))
-            .add_systems(Startup, setup_bullets)
+            .add_plugins(PoolPlugin::<Bullet>::new(1, new_bullet))
             .init_resource::<ShootTimer>()
             .register_type::<Pool<Bullet>>()
             .register_type::<TileDestructor<Bullet>>();
@@ -168,36 +168,34 @@ fn bullet_spawn_offset(dir: LookDir, player_size: Vec2) -> Vec3 {
     }
 }
 
-pub fn setup_bullets(mut commands: Commands, mut pool: ResMut<Pool<Bullet>>) {
-    setup_pool::<Bullet>(&mut commands, &mut pool, 2, |commands| {
-        commands
-            .spawn((
-                Sprite {
-                    color: Color::srgb(0.9, 0.9, 0.9),
-                    custom_size: Some(Vec2::splat(2.0)),
-                    ..default()
-                },
-                RigidBody::Dynamic,
-                LinearVelocity(Vec2::ZERO),
-                Collider::rectangle(2.0, 2.0),
-                Bullet,
-                LockedAxes::ROTATION_LOCKED,
-                LinearDamping(0.0),
-                AngularDamping(0.0),
-                // MaxLinearSpeed(10000.0),
-                RigidBodyDisabled,
-                ColliderDisabled,
-                SpeculativeMargin(1.0),
-                //SweptCcd::LINEAR,
-                RegionAware,
-                Visibility::Hidden,
-                CollisionLayers::new(GameLayer::Player, [GameLayer::Player, GameLayer::Bricks]),
-                BulletData {
-                    traveled: 0.0,
-                    max_distance: 0.0,
-                    parent: None,
-                },
-            ))
-            .id()
-    });
+fn new_bullet(commands: &mut Commands) -> Entity {
+    commands
+        .spawn((
+            Sprite {
+                color: Color::srgb(0.9, 0.9, 0.9),
+                custom_size: Some(Vec2::splat(2.0)),
+                ..default()
+            },
+            RigidBody::Dynamic,
+            LinearVelocity(Vec2::ZERO),
+            Collider::rectangle(2.0, 2.0),
+            Bullet,
+            LockedAxes::ROTATION_LOCKED,
+            LinearDamping(0.0),
+            AngularDamping(0.0),
+            // MaxLinearSpeed(10000.0),
+            RigidBodyDisabled,
+            ColliderDisabled,
+            SpeculativeMargin(1.0),
+            //SweptCcd::LINEAR,
+            RegionAware,
+            Visibility::Hidden,
+            CollisionLayers::new(GameLayer::Player, [GameLayer::Player, GameLayer::Bricks]),
+            BulletData {
+                traveled: 0.0,
+                max_distance: 0.0,
+                parent: None,
+            },
+        ))
+        .id()
 }

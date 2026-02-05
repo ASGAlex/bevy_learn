@@ -47,7 +47,6 @@ fn main() {
         .add_plugins(TileDestructorPlugin)
         .add_plugins(ShootingPlugin)
         .add_plugins(RegionActivationPlugin)
-        .add_plugins(PoolPlugin::<Bullet>::default())
         .insert_resource(Gravity(Vec2::ZERO))
         .insert_resource(LastMoveDir::default())
         .init_resource::<PlayerLookDir>()

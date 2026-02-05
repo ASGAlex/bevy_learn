@@ -3,12 +3,16 @@ use std::marker::PhantomData;
 use bevy::prelude::*;
 
 pub struct PoolPlugin<T: Component> {
+    initial_size: usize,
+    spawn_fn: fn(&mut Commands) -> Entity,
     _marker: PhantomData<T>,
 }
 
-impl<T: Component> Default for PoolPlugin<T> {
-    fn default() -> Self {
+impl<T: Component> PoolPlugin<T> {
+    pub fn new(initial_size: usize, spawn_fn: fn(&mut Commands) -> Entity) -> Self {
         Self {
+            initial_size,
+            spawn_fn,
             _marker: PhantomData,
         }
     }
@@ -17,6 +21,16 @@ impl<T: Component> Default for PoolPlugin<T> {
 impl<T: Component> Plugin for PoolPlugin<T> {
     fn build(&self, app: &mut App) {
         app.init_resource::<Pool<T>>();
+        let spawn_fn = self.spawn_fn;
+
+        let initial_size = self.initial_size;
+
+        app.world_mut()
+            .resource_scope(|world, mut pool: Mut<Pool<T>>| {
+                pool.spawn_fn.get_or_insert(spawn_fn);
+
+                extend_pool(&mut world.commands(), &mut pool, initial_size);
+            });
     }
 }
 
@@ -30,6 +44,8 @@ pub struct Active<T: Component>(pub PhantomData<T>);
 pub struct Pool<T: Component> {
     pub free: Vec<Entity>,
     #[reflect(ignore)]
+    spawn_fn: Option<fn(&mut Commands) -> Entity>,
+    #[reflect(ignore)]
     _marker: PhantomData<T>,
 }
 
@@ -38,16 +54,16 @@ impl<T: Component> Default for Pool<T> {
         Self {
             free: Vec::new(),
             _marker: PhantomData,
+            spawn_fn: None,
         }
     }
 }
 
-pub fn setup_pool<T: Component>(
-    commands: &mut Commands,
-    pool: &mut Pool<T>,
-    count: usize,
-    mut spawn_fn: impl FnMut(&mut Commands) -> Entity,
-) {
+pub fn extend_pool<T: Component>(commands: &mut Commands, pool: &mut Pool<T>, count: usize) {
+    let Some(spawn_fn) = pool.spawn_fn else {
+        return;
+    };
+
     for _ in 0..count {
         let e = spawn_fn(commands);
 
@@ -57,7 +73,6 @@ pub fn setup_pool<T: Component>(
 
         pool.free.push(e);
     }
-    // dbg!("Pool size is:".to_string() + &pool.free.len().to_string());
 }
 
 pub fn activate_from_pool<T: Component>(
@@ -65,6 +80,9 @@ pub fn activate_from_pool<T: Component>(
     pool: &mut Pool<T>,
     activate_fn: impl FnOnce(Entity, &mut Commands),
 ) -> bool {
+    if pool.free.is_empty() {
+        extend_pool(commands, pool, 100);
+    }
     let Some(entity) = pool.free.pop() else {
         return false;
     };
