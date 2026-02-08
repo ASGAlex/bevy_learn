@@ -19,7 +19,7 @@ use bevy_spritesheet_animation::plugin::SpritesheetAnimationPlugin;
 const MAP_CHUNK_SIZE: f32 = 400.0;
 const PHYSICS_SPEED: f32 = 0.3;
 /// How quickly should the camera snap to the desired location.
-const CAMERA_DECAY_RATE: f32 = 1.;
+const CAMERA_DECAY_RATE: f32 = 1.1;
 
 /// Player movement speed factor.
 const PLAYER_SPEED: f32 = 50. / PHYSICS_SPEED;
@@ -56,14 +56,12 @@ fn main() {
             FixedUpdate,
             (
                 spawn_player,
-                zoom,
                 move_player,
-                // interpolate_player_position,
                 apply_player_look_dir.after(move_player),
                 player_animation_controller.after(move_player),
             ),
         )
-        .add_systems(PostUpdate, update_camera)
+        .add_systems(PostUpdate, update_camera_position)
         .run();
 }
 
