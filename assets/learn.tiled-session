@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "tiles/tank.tsx",
+    "activeFile": "tiles/new.tmx",
     "expandedProjectPaths": [
     ],
     "file.lastUsedOpenFilter": "Все файлы (*)",
@@ -50,8 +50,32 @@
             "scaleInDock": 5.5,
             "scaleInEditor": 16
         },
+        "tiles/bricks_small..tsx": {
+            "scaleInDock": 8,
+            "scaleInEditor": 8
+        },
         "tiles/ground.tsx": {
+            "scaleInDock": 5.5,
+            "scaleInEditor": 16
+        },
+        "tiles/ground_small.tsx": {
             "scaleInDock": 5.5
+        },
+        "tiles/new.tmx": {
+            "scale": 2,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 147.75,
+                "y": -56.25
+            }
+        },
+        "tiles/new1.tmx": {
+            "scale": 2,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": -44.25,
+                "y": -56.25
+            }
         },
         "tiles/radar_head.tsx": {
             "dynamicWrapping": false,
@@ -70,93 +94,107 @@
             "scaleInEditor": 11
         },
         "tiles/tutorial.tmx": {
-            "scale": 1.5,
-            "selectedLayer": 3,
+            "scale": 0.75,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 123.66666666666663,
-                "y": 408.99999999999994
+                "x": 539.3333333333333,
+                "y": -67.33333333333337
             }
         },
+        "tiles/tutorial.tmx#bricks_small": {
+            "scaleInDock": 8,
+            "scaleInEditor": 23
+        },
         "tiles/tutorial_1.tmx": {
-            "scale": 0.5,
+            "scale": 0.75,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": -149,
-                "y": 211
+                "x": -876.6666666666666,
+                "y": 491.33333333333326
             }
         },
         "tiles/tutorial_2.tmx": {
             "scale": 0.75,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 515.3333333333334,
-                "y": 518
+                "x": -76.66666666666674,
+                "y": 627.3333333333333
             }
         },
         "tiles/tutorial_3.tmx": {
-            "scale": 1,
+            "scale": 0.75,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": -3.5,
-                "y": 338.5
+                "x": -476.66666666666674,
+                "y": 491.33333333333326
             }
         },
         "tiles/tutorial_4.tmx": {
-            "scale": 1,
+            "scale": 0.75,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": -141.5,
-                "y": 5.5
+                "x": -476.66666666666674,
+                "y": 91.33333333333326
             }
         },
         "tiles/tutorial_5.tmx": {
-            "scale": 1,
+            "scale": 0.75,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 316.5,
-                "y": 367.5
+                "x": -76.66666666666674,
+                "y": 91.33333333333326
             }
         },
         "tiles/tutorial_6.tmx": {
-            "scale": 0.5,
+            "scale": 0.75,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 1169,
-                "y": 159
+                "x": 323.33333333333326,
+                "y": 91.33333333333326
             }
         }
     },
+    "frame.defaultDuration": 500,
+    "last.exportedFilePath": "//wsl.localhost/Debian/home/asgalex/bevy_learn/assets/tiles",
     "last.externalTilesetPath": "//wsl.localhost/Debian/home/asgalex/bevy_learn/assets/tiles",
-    "last.worldFilePath": "C:/Users/asgalex/Documents/Projects/Rust/bevy_ecs_tiled/assets/worlds",
+    "last.imagePath": "//wsl.localhost/Debian/home/asgalex/bevy_learn/assets/images",
+    "last.worldFilePath": "//wsl.localhost/Debian/home/asgalex/bevy_learn/assets/tiles",
+    "lastUsedTilesetExportFilter": "Все файлы (*)",
     "loadedWorlds": [
-        "//wsl.localhost/Debian/home/asgalex/bevy_learn/assets/tiles/learn.world",
-        "C:/Users/asgalex/Documents/Projects/Rust/bevy_learn/assets/tiles/learn.world"
+        "//wsl.localhost/Debian/home/asgalex/bevy_learn/assets/tiles/learn.world"
     ],
     "map.fixedSize": false,
     "map.lastUsedFormat": "tmx",
     "map.renderOrder": "2",
-    "map.tileHeight": 8,
-    "map.tileWidth": 8,
+    "map.tileHeight": 4,
+    "map.tileWidth": 4,
     "openFiles": [
-        "tiles/tutorial.tmx",
-        "tiles/bricks.tsx",
+        "tiles/new.tmx",
+        "tiles/bricks_small..tsx",
+        "tiles/new1.tmx",
         "tiles/tank.tsx"
     ],
     "project": "learn.tiled-project",
     "property.type": "object",
     "recentFiles": [
+        "tiles/tank.tsx",
+        "tiles/new1.tmx",
+        "tiles/bricks_small..tsx",
+        "tiles/new.tmx",
+        "tiles/tutorial_2.tmx",
         "tiles/tutorial.tmx",
         "tiles/bricks.tsx",
-        "tiles/tank.tsx",
-        "tiles/tutorial_6.tmx",
+        "tiles/tutorial_3.tmx",
         "tiles/tutorial_5.tmx",
         "tiles/tutorial_4.tmx",
-        "tiles/tutorial_3.tmx",
-        "tiles/tutorial_2.tmx",
         "tiles/tutorial_1.tmx",
-        "tiles/second.tmx",
-        "C:/Users/asgalex/Documents/Projects/Rust/bevy_ecs_tiled/assets/worlds/orthogonal/world_map001.tmx",
-        "C:/Users/asgalex/Documents/Projects/Rust/bevy_ecs_tiled/assets/tiles/orthogonal_1.tsx"
+        "tiles/tutorial_6.tmx"
     ],
-    "tileset.lastUsedFilter": "Файлы набора тайлов Tiled (*.tsx *.xml)"
+    "tileset.embedInMap": true,
+    "tileset.lastUsedFilter": "Файлы набора тайлов Tiled (*.tsx *.xml)",
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 4,
+        "width": 4
+    }
 }

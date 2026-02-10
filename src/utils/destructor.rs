@@ -41,8 +41,10 @@ impl<P: Component + Send + Sync + 'static> Default for TileDestructor<P> {
 struct TileDestructorRemoveMarker;
 
 #[allow(dead_code)]
-#[derive(Component)]
-pub struct AffectedByDestructor;
+#[derive(Component, Default)]
+pub struct AffectedByDestructor {
+    pub layer_id: u32,
+}
 
 #[allow(dead_code)]
 #[allow(clippy::too_many_arguments)]
@@ -62,6 +64,7 @@ fn destructor_remove_tiles(
             &GlobalTransform,
             &TilemapAnchor,
             &TiledMapReference,
+            &AffectedByDestructor,
             Option<&TilemapUpdatedMarker>,
         ),
         With<AffectedByDestructor>,
@@ -102,6 +105,7 @@ fn destructor_remove_tiles(
                         &transform,
                         &anchor,
                         map_reference,
+                        affected_by_destructor,
                         is_updated,
                     ) in q_tiled_tilemap.iter_mut()
                     {
@@ -141,24 +145,24 @@ fn destructor_remove_tiles(
                                 commands.entity(tile_entity).despawn();
                                 storage.remove(&pos);
 
-                                if let Ok((map_handle, map_storage)) =
-                                    q_maps.get(map_reference.entity())
+                                if let Ok(map_handle) = q_maps.get(map_reference.entity())
+                                    && let Some(map_asset) = map_assets.get(map_handle.0.id())
                                 {
-                                    if let Some(map_asset) = map_assets.get(map_handle.0.id()) {
-                                        let Some(layer_id) =
-                                            map_storage.get_layer_id(parent_of_collider.get())
-                                        else {
-                                            continue;
-                                        };
-                                        removed_tiles.add_tile(map_asset, layer_id, &pos);
-                                    }
+                                    removed_tiles.add_tile(
+                                        map_asset,
+                                        affected_by_destructor.layer_id,
+                                        &pos,
+                                    );
                                 }
 
                                 commands.entity(collider_entity).despawn();
 
-                                commands
-                                    .entity(tilemap)
-                                    .insert_if(TilemapUpdatedMarker, || is_updated.is_none());
+                                commands.entity(tilemap).insert_if(
+                                    TilemapUpdatedMarker {
+                                        layer_id: affected_by_destructor.layer_id,
+                                    },
+                                    || is_updated.is_none(),
+                                );
 
                                 if destructor_config.remove_on_contact {
                                     match destructor_config.remove_fn {

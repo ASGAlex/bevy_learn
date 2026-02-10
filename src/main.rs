@@ -10,6 +10,8 @@ use crate::utils::pool::*;
 use crate::utils::region_deactivation::RegionActivationPlugin;
 use crate::utils::region_deactivation::RegionAware;
 use avian2d::prelude::*;
+use bevy::diagnostic::FrameTimeDiagnosticsPlugin;
+use bevy::diagnostic::LogDiagnosticsPlugin;
 use bevy::prelude::*;
 use bevy_ecs_tiled::prelude::tiled::PropertyValue;
 use bevy_ecs_tiled::prelude::*;
@@ -37,7 +39,7 @@ fn main() {
                 .with_length_unit(1.)
                 .set(PhysicsInterpolationPlugin::interpolate_all()),
             TiledPhysicsPlugin::<TiledPhysicsAvianBackend>::default(),
-            PhysicsDebugPlugin,
+            // PhysicsDebugPlugin,
             // TiledDebugTilesPlugin::default(),
         ))
         .insert_resource(Time::<Physics>::default().with_relative_speed(PHYSICS_SPEED))
@@ -47,6 +49,8 @@ fn main() {
         .add_plugins(TileDestructorPlugin)
         .add_plugins(ShootingPlugin)
         .add_plugins(RegionActivationPlugin)
+        .add_plugins(FrameTimeDiagnosticsPlugin::default())
+        .add_plugins(LogDiagnosticsPlugin::default())
         .insert_resource(Gravity(Vec2::ZERO))
         .insert_resource(LastMoveDir::default())
         .init_resource::<PlayerLookDir>()
@@ -100,20 +104,23 @@ fn init(mut commands: Commands, asset_server: Res<AssetServer>) {
                     match collider_created.event().get_layer(&assets) {
                         None => {}
                         Some(data) => {
-                            if data.name == "trees" {
-                                entity_commands.insert(Sensor).insert(Tree).insert(
-                                    CollisionLayers::new(GameLayer::Trees, [GameLayer::Player]),
-                                );
-                            } else if data.name == "water" {
-                                entity_commands.insert(Water).insert(CollisionLayers::new(
-                                    GameLayer::Water,
-                                    [GameLayer::Player],
-                                ));
-                            } else if data.name == "bricks" {
-                                entity_commands.insert(Brick).insert(CollisionLayers::new(
-                                    GameLayer::Bricks,
-                                    [GameLayer::Player],
-                                ));
+                            if let Some(tile_type) = &data.user_type {
+                                if tile_type == "trees" {
+                                    entity_commands.insert(Sensor).insert(Tree).insert(
+                                        CollisionLayers::new(GameLayer::Trees, [GameLayer::Player]),
+                                    );
+                                } else if tile_type == "water" {
+                                    entity_commands.insert(Water).insert(CollisionLayers::new(
+                                        GameLayer::Water,
+                                        [GameLayer::Player],
+                                    ));
+                                } else if tile_type == "bricks" {
+                                    entity_commands.insert(Brick).insert(CollisionLayers::new(
+                                        GameLayer::Bricks,
+                                        [GameLayer::Player],
+                                    ));
+                                }
+                                dbg!(tile_type);
                             }
                         }
                     };
@@ -124,12 +131,13 @@ fn init(mut commands: Commands, asset_server: Res<AssetServer>) {
             |tile_created: On<TiledEvent<TileCreated>>,
              assets: Res<Assets<TiledMapAsset>>,
              mut commands: Commands| {
-                match tile_created.event().get_tile(&assets) {
+                let tile = tile_created.event().get_tile(&assets);
+                match tile {
                     None => {}
-                    Some(tile) => match tile.properties.get("name") {
+                    Some(tile) => match &tile.user_type {
                         None => {}
-                        Some(name) => match name {
-                            PropertyValue::StringValue(data) if data == "brick" => {
+                        Some(tile_type) => {
+                            if tile_type == "brick" {
                                 match tile_created.event().get_tile_entity() {
                                     None => {}
                                     Some(entity) => {
@@ -137,15 +145,18 @@ fn init(mut commands: Commands, asset_server: Res<AssetServer>) {
                                         if let Some(tilemap_entity) =
                                             tile_created.event().get_tilemap_entity()
                                         {
-                                            commands
-                                                .entity(tilemap_entity)
-                                                .insert(AffectedByDestructor);
+                                            commands.entity(tilemap_entity).insert(
+                                                AffectedByDestructor {
+                                                    layer_id: tile_created
+                                                        .get_layer_index()
+                                                        .unwrap(),
+                                                },
+                                            );
                                         }
                                     }
                                 }
                             }
-                            _ => (),
-                        },
+                        }
                     },
                 }
             },

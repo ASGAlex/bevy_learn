@@ -1,53 +1,18 @@
 {
     "maps": [
         {
-            "fileName": "tutorial.tmx",
-            "height": 400,
-            "width": 400,
-            "x": 0,
-            "y": 0
+            "fileName": "new.tmx",
+            "height": 192,
+            "width": 192,
+            "x": 12,
+            "y": 132
         },
         {
-            "fileName": "tutorial_2.tmx",
-            "height": 512,
-            "width": 512,
-            "x": 400,
-            "y": 0
-        },
-        {
-            "fileName": "tutorial_3.tmx",
-            "height": 512,
-            "width": 512,
-            "x": 800,
-            "y": 0
-        },
-        {
-            "fileName": "tutorial_1.tmx",
-            "height": 512,
-            "width": 512,
-            "x": 1200,
-            "y": 0
-        },
-        {
-            "fileName": "tutorial_4.tmx",
-            "height": 512,
-            "width": 512,
-            "x": 800,
-            "y": 400
-        },
-        {
-            "fileName": "tutorial_5.tmx",
-            "height": 512,
-            "width": 512,
-            "x": 400,
-            "y": 400
-        },
-        {
-            "fileName": "tutorial_6.tmx",
-            "height": 512,
-            "width": 512,
-            "x": 0,
-            "y": 400
+            "fileName": "new1.tmx",
+            "height": 256,
+            "width": 192,
+            "x": 204,
+            "y": 132
         }
     ],
     "onlyShowAdjacentMaps": false,
