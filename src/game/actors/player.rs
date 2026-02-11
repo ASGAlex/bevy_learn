@@ -1,11 +1,10 @@
 use crate::{
-    GameLayer,
-    game::actors::movement::PlayerMoving,
-    utils::tileset_reader::{read_sprite_animation_from_tileset, read_sprite_from_tileset},
+    GameLayer, game::actors::movement::PlayerMoving,
+    utils::tileset_reader::read_sprite_animation_from_tileset,
 };
 use avian2d::prelude::{
     AngularDamping, Collider, CollidingEntities, CollisionEventsEnabled, CollisionLayers,
-    LinearDamping, LockedAxes, MaxLinearSpeed, RigidBody,
+    LinearDamping, LockedAxes, RigidBody,
 };
 use bevy::prelude::*;
 use bevy_ecs_tiled::prelude::*;
@@ -66,8 +65,8 @@ pub fn spawn_player(
     mut commands: Commands,
     tiled_map_assets: Res<Assets<TiledMapAsset>>,
     existing_player: Option<Single<Entity, With<Player>>>,
-    mut animations: ResMut<Assets<Animation>>,
-    mut atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
+    animations: ResMut<Assets<Animation>>,
+    atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
     images: ResMut<Assets<Image>>,
 ) {
     if existing_player.is_some() {
@@ -97,7 +96,7 @@ pub fn spawn_player(
     //commands.entity(id).insert(TileDestructor::default());
     commands.entity(id).insert((
         sprite,
-        //  animation,
+        animation,
         LinearDamping(10.0),
         AngularDamping(0.0),
         //        MaxLinearSpeed(50.0),
