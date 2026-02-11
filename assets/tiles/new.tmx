@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="left-up" width="30" height="20" tilewidth="4" tileheight="4" infinite="1" nextlayerid="5" nextobjectid="1">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="left-up" width="30" height="20" tilewidth="4" tileheight="4" infinite="1" nextlayerid="6" nextobjectid="2">
  <tileset firstgid="1" source="ground_small.tsx"/>
  <tileset firstgid="25" source="bricks_small..tsx"/>
  <tileset firstgid="57" source="tank.tsx"/>
@@ -378,4 +378,7 @@
 </chunk>
   </data>
  </layer>
+ <objectgroup id="5" name="spawn">
+  <object id="1" x="144.5" y="-25"/>
+ </objectgroup>
 </map>

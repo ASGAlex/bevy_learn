@@ -63,17 +63,17 @@
         },
         "tiles/new.tmx": {
             "scale": 2,
-            "selectedLayer": 3,
+            "selectedLayer": 4,
             "viewCenter": {
-                "x": 147.75,
-                "y": -56.25
+                "x": 355.25,
+                "y": 30.25
             }
         },
         "tiles/new1.tmx": {
             "scale": 2,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": -44.25,
+                "x": -44.5,
                 "y": -56.25
             }
         },

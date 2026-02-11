@@ -1,6 +1,7 @@
 use crate::{
-    GameLayer, game::actors::movement::PlayerMoving,
-    utils::tileset_reader::read_sprite_animation_from_tileset,
+    GameLayer,
+    game::actors::movement::PlayerMoving,
+    utils::tileset_reader::{read_sprite_animation_from_tileset, read_sprite_from_tileset},
 };
 use avian2d::prelude::{
     AngularDamping, Collider, CollidingEntities, CollisionEventsEnabled, CollisionLayers,
@@ -84,11 +85,19 @@ pub fn spawn_player(
         return;
     };
 
+    //===================
+    // !!! Example usage:
+    //
+    // let Some(sprite) =
+    //     read_sprite_from_tileset("tank".to_string(), 0, tiled_map_assets, atlas_layouts)
+    // else {
+    //     return;
+    // };
     let id = commands.spawn(PlayerBundle::new(0.0, 0.0, -150.0)).id();
     //commands.entity(id).insert(TileDestructor::default());
     commands.entity(id).insert((
         sprite,
-        animation,
+        //  animation,
         LinearDamping(10.0),
         AngularDamping(0.0),
         //        MaxLinearSpeed(50.0),
