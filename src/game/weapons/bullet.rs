@@ -5,10 +5,13 @@ use avian2d::prelude::{
 use bevy::prelude::*;
 
 use crate::{
-    GameLayer, MainCamera, PHYSICS_SPEED,
-    game::actors::{
-        movement::{LookDir, PlayerLookDir},
-        player::Player,
+    MainCamera, PHYSICS_SPEED,
+    game::{
+        actors::{
+            movement::{LookDir, PlayerLookDir},
+            player::Player,
+        },
+        map_objects::GameLayer,
     },
     utils::{destructor::TileDestructor, pool::*, region_deactivation::RegionAware},
 };

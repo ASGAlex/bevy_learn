@@ -3,21 +3,20 @@ mod utils;
 
 use crate::game::actors::movement::*;
 use crate::game::actors::player::*;
+use crate::game::map_objects::MapObjectsPlugin;
 use crate::game::weapons::bullet::*;
 use crate::utils::camera::*;
 use crate::utils::destructor::*;
-use crate::utils::pool::*;
 use crate::utils::region_deactivation::RegionActivationPlugin;
-use crate::utils::region_deactivation::RegionAware;
 use avian2d::prelude::*;
 use bevy::diagnostic::FrameTimeDiagnosticsPlugin;
 use bevy::diagnostic::LogDiagnosticsPlugin;
 use bevy::prelude::*;
-use bevy_ecs_tiled::prelude::tiled::PropertyValue;
 use bevy_ecs_tiled::prelude::*;
 use bevy_inspector_egui::bevy_egui::EguiPlugin;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy_spritesheet_animation::plugin::SpritesheetAnimationPlugin;
+
 const MAP_CHUNK_SIZE: f32 = 400.0;
 const PHYSICS_SPEED: f32 = 0.3;
 /// How quickly should the camera snap to the desired location.
@@ -51,6 +50,7 @@ fn main() {
         .add_plugins(RegionActivationPlugin)
         .add_plugins(FrameTimeDiagnosticsPlugin::default())
         .add_plugins(LogDiagnosticsPlugin::default())
+        .add_plugins(MapObjectsPlugin)
         .insert_resource(Gravity(Vec2::ZERO))
         .insert_resource(LastMoveDir::default())
         .init_resource::<PlayerLookDir>()
@@ -85,100 +85,12 @@ fn init(mut commands: Commands, asset_server: Res<AssetServer>) {
     ));
 
     // Load and spawn the world
-    commands
-        .spawn((
-            TiledWorld(asset_server.load("tiles/learn.world")),
-            TiledWorldChunking::new(MAP_CHUNK_SIZE, MAP_CHUNK_SIZE),
-            TiledPhysicsSettings::<TiledPhysicsAvianBackend> {
-                backend: TiledPhysicsAvianBackend::Polyline,
-                ..default()
-            },
-        ))
-        .observe(
-            |collider_created: On<TiledEvent<ColliderCreated>>,
-             assets: Res<Assets<TiledMapAsset>>,
-             mut commands: Commands| {
-                if collider_created.event().event.source == TiledColliderSource::TilesLayer {
-                    let mut entity_commands = commands.entity(collider_created.event().origin);
-                    entity_commands.insert(RigidBody::Static);
-                    match collider_created.event().get_layer(&assets) {
-                        None => {}
-                        Some(data) => {
-                            if let Some(tile_type) = &data.user_type {
-                                if tile_type == "trees" {
-                                    entity_commands.insert(Sensor).insert(Tree).insert(
-                                        CollisionLayers::new(GameLayer::Trees, [GameLayer::Player]),
-                                    );
-                                } else if tile_type == "water" {
-                                    entity_commands.insert(Water).insert(CollisionLayers::new(
-                                        GameLayer::Water,
-                                        [GameLayer::Player],
-                                    ));
-                                } else if tile_type == "bricks" {
-                                    entity_commands.insert(Brick).insert(CollisionLayers::new(
-                                        GameLayer::Bricks,
-                                        [GameLayer::Player],
-                                    ));
-                                }
-                                dbg!(tile_type);
-                            }
-                        }
-                    };
-                }
-            },
-        )
-        .observe(
-            |tile_created: On<TiledEvent<TileCreated>>,
-             assets: Res<Assets<TiledMapAsset>>,
-             mut commands: Commands| {
-                let tile = tile_created.event().get_tile(&assets);
-                match tile {
-                    None => {}
-                    Some(tile) => match &tile.user_type {
-                        None => {}
-                        Some(tile_type) => {
-                            if tile_type == "brick" {
-                                match tile_created.event().get_tile_entity() {
-                                    None => {}
-                                    Some(entity) => {
-                                        commands.entity(entity).insert(Brick);
-                                        if let Some(tilemap_entity) =
-                                            tile_created.event().get_tilemap_entity()
-                                        {
-                                            commands.entity(tilemap_entity).insert(
-                                                AffectedByDestructor {
-                                                    layer_id: tile_created
-                                                        .get_layer_index()
-                                                        .unwrap(),
-                                                },
-                                            );
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                }
-            },
-        );
-}
-
-#[derive(Component)]
-struct Tree;
-
-#[derive(Component)]
-struct Brick;
-
-#[derive(Component)]
-struct Water;
-
-#[derive(PhysicsLayer, Default)]
-enum GameLayer {
-    #[default]
-    Ground,
-    Water,
-    Player,
-    Bricks,
-    Trees,
-    Sky,
+    commands.spawn((
+        TiledWorld(asset_server.load("tiles/learn.world")),
+        TiledWorldChunking::new(MAP_CHUNK_SIZE, MAP_CHUNK_SIZE),
+        TiledPhysicsSettings::<TiledPhysicsAvianBackend> {
+            backend: TiledPhysicsAvianBackend::Polyline,
+            ..default()
+        },
+    ));
 }

@@ -1,5 +1,5 @@
 use crate::{
-    GameLayer, game::actors::movement::PlayerMoving,
+    game::{actors::movement::PlayerMoving, map_objects::GameLayer},
     utils::tileset_reader::read_sprite_animation_from_tileset,
 };
 use avian2d::prelude::{
