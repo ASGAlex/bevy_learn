@@ -65,8 +65,8 @@
             "scale": 2,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 355.25,
-                "y": 30.25
+                "x": 0,
+                "y": 0
             }
         },
         "tiles/new1.tmx": {

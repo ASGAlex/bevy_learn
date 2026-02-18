@@ -38,19 +38,22 @@ fn main() {
                 .with_length_unit(1.)
                 .set(PhysicsInterpolationPlugin::interpolate_all()),
             TiledPhysicsPlugin::<TiledPhysicsAvianBackend>::default(),
-            // PhysicsDebugPlugin,
+            PhysicsDebugPlugin,
             // TiledDebugTilesPlugin::default(),
         ))
         .insert_resource(Time::<Physics>::default().with_relative_speed(PHYSICS_SPEED))
         .add_plugins(EguiPlugin::default())
         .add_plugins(WorldInspectorPlugin::new())
         .add_plugins(SpritesheetAnimationPlugin)
-        .add_plugins(TileDestructorPlugin)
-        .add_plugins(ShootingPlugin)
-        .add_plugins(RegionActivationPlugin)
+        .add_plugins((
+            TileDestructorPlugin,
+            ShootingPlugin,
+            RegionActivationPlugin,
+            MapObjectsPlugin,
+            GameCameraPlugin,
+        ))
         .add_plugins(FrameTimeDiagnosticsPlugin::default())
         .add_plugins(LogDiagnosticsPlugin::default())
-        .add_plugins(MapObjectsPlugin)
         .insert_resource(Gravity(Vec2::ZERO))
         .insert_resource(LastMoveDir::default())
         .init_resource::<PlayerLookDir>()
@@ -65,7 +68,7 @@ fn main() {
                 player_animation_controller.after(move_player),
             ),
         )
-        .add_systems(PostUpdate, update_camera_position)
+        // .add_systems(PostUpdate, update_camera_position)
         .run();
 }
 

@@ -44,7 +44,7 @@ impl CollisionDataBundle {
     pub fn new() -> Self {
         Self {
             rigid_body: RigidBody::Dynamic,
-            collider: Collider::circle(8.),
+            collider: Collider::round_rectangle(12.0, 12.0, 1.5),
             collision_events_enabled: CollisionEventsEnabled,
             colliding_entities: CollidingEntities::default(),
             layers: CollisionLayers::new(
