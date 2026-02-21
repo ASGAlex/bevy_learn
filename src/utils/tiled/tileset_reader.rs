@@ -73,7 +73,7 @@ pub fn read_sprite_from_tileset(
         let layout = TextureAtlasLayout::from_grid(
             UVec2::new(tileset.tile_width, tileset.tile_height),
             tileset.columns,
-            rows as u32,
+            rows,
             None,
             None,
         );

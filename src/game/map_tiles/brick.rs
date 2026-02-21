@@ -1,40 +1,44 @@
-use avian2d::prelude::CollisionLayers;
+use avian2d::prelude::{CollisionLayers, RigidBody};
 use bevy::prelude::*;
-use bevy_ecs_tiled::prelude::{TiledMapAsset, tiled::Layer};
+use bevy_ecs_tiled::prelude::{TiledEvent, TiledMapAsset, tiled::Layer};
 
 use crate::{
-    game::map_objects::{GameLayer, MapObject},
-    utils::destructor::AffectedByDestructor,
+    game::GameLayer,
+    utils::tiled::{
+        destructor::AffectedByDestructor,
+        map_tile_type::{MapItemBasic, MapTileType},
+    },
 };
 
 #[derive(Component, Reflect)]
 pub struct Brick;
 
-impl MapObject for Brick {
+impl MapItemBasic for Brick {
     fn on_collision_created(
         entity_commands: &mut EntityCommands,
-        assets: &Res<Assets<TiledMapAsset>>,
-        data: &Layer,
+        _assets: &Res<Assets<TiledMapAsset>>,
+        _data: &Layer,
     ) {
         entity_commands
+            .insert(RigidBody::Static)
             .insert(Brick)
             .insert(CollisionLayers::new(GameLayer::Bricks, [GameLayer::Player]));
     }
 
-    fn name() -> String {
+    fn class() -> String {
         "brick".to_string()
     }
 
-    fn layer_name() -> String {
+    fn layer_class() -> String {
         "bricks".to_string()
     }
+}
 
+impl MapTileType for Brick {
     fn on_tile_created(
         commands: &mut Commands,
-        assets: &Res<Assets<TiledMapAsset>>,
-        tile_created: &On<
-            bevy_ecs_tiled::prelude::TiledEvent<bevy_ecs_tiled::prelude::TileCreated>,
-        >,
+        _assets: &Res<Assets<TiledMapAsset>>,
+        tile_created: &On<TiledEvent<bevy_ecs_tiled::prelude::TileCreated>>,
     ) {
         match tile_created.event().get_tile_entity() {
             None => {}

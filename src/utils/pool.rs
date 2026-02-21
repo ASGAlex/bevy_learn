@@ -72,6 +72,7 @@ pub fn extend_pool<T: Component>(commands: &mut Commands, pool: &mut Pool<T>, co
             .insert((Visibility::Hidden, Inactive::<T>(PhantomData)));
 
         pool.free.push(e);
+        dbg!(format!("Adding {} bullets", count));
     }
 }
 
@@ -111,5 +112,5 @@ pub fn deactivate_to_pool<T: Component>(
         .insert((Visibility::Hidden, Inactive::<T>(PhantomData)));
 
     pool.free.push(entity);
-    dbg!(("DEActivate: ", entity));
+    // dbg!(("DEActivate: ", entity));
 }

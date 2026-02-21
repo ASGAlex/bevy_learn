@@ -37,8 +37,7 @@ impl<P: Component + Send + Sync + 'static> Default for TileDestructor<P> {
     }
 }
 
-#[derive(Component)]
-struct TileDestructorRemoveMarker;
+
 
 #[allow(dead_code)]
 #[derive(Component, Default)]
@@ -155,7 +154,11 @@ fn destructor_remove_tiles(
                                     );
                                 }
 
-                                commands.entity(collider_entity).despawn();
+                                commands.entity(collider_entity).queue_silenced(
+                                    |entity_commands: EntityWorldMut<'_>| {
+                                        entity_commands.despawn();
+                                    },
+                                );
 
                                 commands.entity(tilemap).insert_if(
                                     TilemapUpdatedMarker {

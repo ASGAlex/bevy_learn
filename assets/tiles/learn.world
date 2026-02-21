@@ -4,15 +4,22 @@
             "fileName": "new.tmx",
             "height": 192,
             "width": 192,
-            "x": 12,
-            "y": 132
+            "x": 512,
+            "y": 128
         },
         {
             "fileName": "new1.tmx",
-            "height": 256,
+            "height": 192,
             "width": 192,
-            "x": 204,
-            "y": 132
+            "x": 704,
+            "y": 128
+        },
+        {
+            "fileName": "menu.tmx",
+            "height": 384,
+            "width": 384,
+            "x": 0,
+            "y": 0
         }
     ],
     "onlyShowAdjacentMaps": false,

@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "tiles/new.tmx",
+    "activeFile": "tiles/new1.tmx",
     "expandedProjectPaths": [
     ],
     "file.lastUsedOpenFilter": "Все файлы (*)",
@@ -52,7 +52,7 @@
         },
         "tiles/bricks_small..tsx": {
             "scaleInDock": 8,
-            "scaleInEditor": 8
+            "scaleInEditor": 32
         },
         "tiles/ground.tsx": {
             "scaleInDock": 5.5,
@@ -61,20 +61,34 @@
         "tiles/ground_small.tsx": {
             "scaleInDock": 5.5
         },
-        "tiles/new.tmx": {
-            "scale": 2,
-            "selectedLayer": 4,
+        "tiles/menu.tmx": {
+            "expandedObjectLayers": [
+                6
+            ],
+            "scale": 3,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 0,
-                "y": 0
+                "x": 29.666666666666686,
+                "y": 46.83333333333333
+            }
+        },
+        "tiles/new.tmx": {
+            "expandedObjectLayers": [
+                5
+            ],
+            "scale": 3,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": -482.33333333333326,
+                "y": -81.16666666666666
             }
         },
         "tiles/new1.tmx": {
-            "scale": 2,
+            "scale": 3,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": -44.5,
-                "y": -56.25
+                "x": -28.666666666666657,
+                "y": -46.83333333333334
             }
         },
         "tiles/radar_head.tsx": {
@@ -89,9 +103,13 @@
                 "y": 360.5
             }
         },
+        "tiles/spawn.tsx": {
+            "scaleInDock": 5.5,
+            "scaleInEditor": 5.5
+        },
         "tiles/tank.tsx": {
             "scaleInDock": 8,
-            "scaleInEditor": 11
+            "scaleInEditor": 32
         },
         "tiles/tutorial.tmx": {
             "scale": 0.75,
@@ -152,12 +170,20 @@
                 "x": 323.33333333333326,
                 "y": 91.33333333333326
             }
+        },
+        "tiles/безымянный.tmx": {
+            "scale": 1.5,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 30.666666666666686,
+                "y": 75
+            }
         }
     },
-    "frame.defaultDuration": 500,
+    "frame.defaultDuration": 90,
     "last.exportedFilePath": "//wsl.localhost/Debian/home/asgalex/bevy_learn/assets/tiles",
     "last.externalTilesetPath": "//wsl.localhost/Debian/home/asgalex/bevy_learn/assets/tiles",
-    "last.imagePath": "//wsl.localhost/Debian/home/asgalex/bevy_learn/assets/images",
+    "last.imagePath": "//wsl.localhost/Debian/home/asgalex/bevy_learn/assets/images/spritesheets",
     "last.worldFilePath": "//wsl.localhost/Debian/home/asgalex/bevy_learn/assets/tiles",
     "lastUsedTilesetExportFilter": "Все файлы (*)",
     "loadedWorlds": [
@@ -170,27 +196,29 @@
     "map.tileWidth": 4,
     "openFiles": [
         "tiles/new.tmx",
-        "tiles/bricks_small..tsx",
         "tiles/new1.tmx",
-        "tiles/tank.tsx"
+        "tiles/tank.tsx",
+        "tiles/bricks_small..tsx",
+        "tiles/spawn.tsx",
+        "tiles/menu.tmx"
     ],
     "project": "learn.tiled-project",
     "property.type": "object",
     "recentFiles": [
+        "tiles/new.tmx",
+        "tiles/menu.tmx",
+        "tiles/spawn.tsx",
+        "tiles/bricks_small..tsx",
         "tiles/tank.tsx",
         "tiles/new1.tmx",
-        "tiles/bricks_small..tsx",
-        "tiles/new.tmx",
+        "tiles/безымянный.tmx",
         "tiles/tutorial_2.tmx",
         "tiles/tutorial.tmx",
         "tiles/bricks.tsx",
         "tiles/tutorial_3.tmx",
-        "tiles/tutorial_5.tmx",
-        "tiles/tutorial_4.tmx",
-        "tiles/tutorial_1.tmx",
-        "tiles/tutorial_6.tmx"
+        "tiles/tutorial_5.tmx"
     ],
-    "tileset.embedInMap": true,
+    "tileset.embedInMap": false,
     "tileset.lastUsedFilter": "Файлы набора тайлов Tiled (*.tsx *.xml)",
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {

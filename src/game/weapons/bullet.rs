@@ -7,19 +7,20 @@ use bevy::prelude::*;
 use crate::{
     MainCamera, PHYSICS_SPEED,
     game::{
+        GameLayer,
         actors::{
             movement::{LookDir, PlayerLookDir},
             player::Player,
         },
-        map_objects::GameLayer,
     },
-    utils::{destructor::TileDestructor, pool::*, region_deactivation::RegionAware},
+    utils::{pool::*, region_deactivation::RegionAware, tiled::destructor::TileDestructor},
 };
 pub struct ShootingPlugin;
 
 impl Plugin for ShootingPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(FixedUpdate, (shoot_system, bullet_lifetime_system))
+        app.add_systems(FixedUpdate, bullet_lifetime_system)
+            .add_systems(Update, shoot_system)
             .add_plugins(PoolPlugin::<Bullet>::new(1, new_bullet))
             .init_resource::<ShootTimer>()
             .register_type::<Pool<Bullet>>()
@@ -123,15 +124,15 @@ pub fn bullet_lifetime_system(
 
         let should_be_removed = bullet.traveled >= bullet.max_distance;
 
-        if !should_be_removed {
-            for collision in collisions.collisions_with(entity) {
-                // Столкновение не с объектом, выпустившем пулю, а с чем-то ещё
-                if collision.body1 != bullet.parent && collision.body2 != bullet.parent {
-                    // should_be_removed = true;
-                    break;
-                }
-            }
-        }
+        // if !should_be_removed {
+        //     for collision in collisions.collisions_with(entity) {
+        //         // Столкновение не с объектом, выпустившем пулю, а с чем-то ещё
+        //         if collision.body1 != bullet.parent && collision.body2 != bullet.parent {
+        //             // should_be_removed = true;
+        //             break;
+        //         }
+        //     }
+        // }
 
         if should_be_removed {
             deactivate_to_pool::<Bullet>(&mut commands, &mut pool, entity, |entity, commands| {
@@ -144,17 +145,6 @@ pub fn bullet_lifetime_system(
                     ))
                     .remove::<TileDestructor<Bullet>>();
             });
-        } else {
-            // let diff = (camera.translation - bullet_transform.translation).abs();
-            // if diff.x >= MAP_CHUNK_SIZE || diff.y >= MAP_CHUNK_SIZE {
-            //     commands.entity(entity).insert((
-            //         RigidBodyDisabled,
-            //         ColliderDisabled,
-            //         Visibility::Hidden,
-            //     ));
-            //     commands.queue(SleepBody(entity));
-            //     dbg!("!!!!!!!!!!!!! SLEEP");
-            // }
         }
     }
 }

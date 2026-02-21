@@ -15,7 +15,7 @@ use bevy::time::{Timer, TimerMode};
 
 const LOOK_FORWARD_DISTANCE: f32 = 48.0;
 const ZOOM_SPEED: f32 = 2.0;
-const BASE_ZOOM: f32 = 0.3;
+const BASE_ZOOM: f32 = 0.2;
 
 #[derive(Default)]
 pub struct GameCameraPlugin;
@@ -44,12 +44,26 @@ pub enum ZoomMode {
 
 pub fn update_camera_position(
     mut camera: Single<(&mut Transform, &mut Projection), (With<Camera2d>, With<MainCamera>)>,
-    player: Single<&Transform, (With<Player>, Without<Camera2d>)>,
+    player: Option<Single<&Transform, (With<Player>, Without<Camera2d>)>>,
     time: Res<Time>,
     look_dir: Res<PlayerLookDir>,
     player_moving: Res<PlayerMoving>,
     mut zoom_state: ResMut<CameraZoomState>,
 ) {
+    let Some(player) = player else {
+        if camera.0.translation.x == 0.0 {
+            camera.0.translation.x = 1.0;
+            camera.0.translation.y = 20.0;
+        } else {
+            camera.0.translation.x = 0.0;
+        }
+
+        if let Projection::Orthographic(ortho) = &mut *camera.1 {
+            ortho.scale = 0.3;
+        }
+        return;
+    };
+
     let idle_zoom = BASE_ZOOM * 1.1;
 
     // ===== MODE SWITCH WITH DELAY =====

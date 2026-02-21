@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.10" tiledversion="1.10.1" name="tank" tilewidth="14" tileheight="16" tilecount="18" columns="3">
+<tileset version="1.10" tiledversion="1.11.0" name="tank" tilewidth="14" tileheight="16" tilecount="18" columns="3">
  <image source="../images/spritesheets/tank_basic2.png" width="42" height="96"/>
  <tile id="0" type="simple">
   <properties>
@@ -10,6 +10,9 @@
    <property name="speed" type="int" value="40"/>
    <property name="zoom" type="float" value="3.5"/>
   </properties>
+  <objectgroup draworder="index" id="3">
+   <object id="2" x="0" y="1" width="14" height="14"/>
+  </objectgroup>
   <animation>
    <frame tileid="0" duration="200"/>
    <frame tileid="1" duration="200"/>
@@ -26,6 +29,9 @@
    <property name="speed" type="int" value="35"/>
    <property name="zoom" type="float" value="3"/>
   </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="14" height="16"/>
+  </objectgroup>
   <animation>
    <frame tileid="3" duration="200"/>
    <frame tileid="4" duration="200"/>
@@ -42,6 +48,9 @@
    <property name="speed" type="int" value="40"/>
    <property name="zoom" type="float" value="3"/>
   </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="1" width="14" height="15"/>
+  </objectgroup>
   <animation>
    <frame tileid="6" duration="200"/>
    <frame tileid="7" duration="200"/>
@@ -58,6 +67,9 @@
    <property name="speed" type="int" value="30"/>
    <property name="zoom" type="float" value="2.8"/>
   </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="1" width="14" height="15"/>
+  </objectgroup>
   <animation>
    <frame tileid="9" duration="200"/>
    <frame tileid="10" duration="200"/>
@@ -74,6 +86,9 @@
    <property name="speed" type="int" value="50"/>
    <property name="zoom" type="float" value="2"/>
   </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="1" width="14" height="15"/>
+  </objectgroup>
   <animation>
    <frame tileid="12" duration="200"/>
    <frame tileid="13" duration="200"/>
@@ -82,6 +97,9 @@
  <tile id="13" type="fast_idle"/>
  <tile id="14" type="fast_wreck"/>
  <tile id="15" type="human">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0" width="14" height="16"/>
+  </objectgroup>
   <animation>
    <frame tileid="15" duration="500"/>
    <frame tileid="16" duration="500"/>

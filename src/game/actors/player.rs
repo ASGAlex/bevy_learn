@@ -1,7 +1,3 @@
-use crate::{
-    game::{actors::movement::PlayerMoving, map_objects::GameLayer},
-    utils::tileset_reader::read_sprite_animation_from_tileset,
-};
 use avian2d::prelude::{
     AngularDamping, Collider, CollidingEntities, CollisionEventsEnabled, CollisionLayers,
     LinearDamping, LockedAxes, RigidBody,
@@ -9,6 +5,11 @@ use avian2d::prelude::{
 use bevy::prelude::*;
 use bevy_ecs_tiled::prelude::*;
 use bevy_spritesheet_animation::prelude::{Animation, SpritesheetAnimation};
+
+use crate::{
+    game::{GameLayer, actors::movement::PlayerMoving, map_objects::spawn::PlayerSpawn},
+    utils::tiled::tileset_reader::read_sprite_animation_from_tileset,
+};
 
 #[derive(Component)]
 pub struct Player;
@@ -68,10 +69,15 @@ pub fn spawn_player(
     animations: ResMut<Assets<Animation>>,
     atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
     images: ResMut<Assets<Image>>,
+    query_player_spawns: Query<(&Transform, &GlobalTransform), With<PlayerSpawn>>,
 ) {
-    if existing_player.is_some() {
+    if existing_player.is_some() || query_player_spawns.is_empty() {
         return;
     }
+
+    let Ok((tr, spawn_transform)) = query_player_spawns.single() else {
+        return;
+    };
 
     let Some((sprite, animation)) = read_sprite_animation_from_tileset(
         "tank".to_string(),
@@ -92,7 +98,14 @@ pub fn spawn_player(
     // else {
     //     return;
     // };
-    let id = commands.spawn(PlayerBundle::new(0.0, 0.0, -150.0)).id();
+
+    let id = commands
+        .spawn(PlayerBundle::new(
+            spawn_transform.translation().x,
+            spawn_transform.translation().y,
+            -150.0,
+        ))
+        .id();
     //commands.entity(id).insert(TileDestructor::default());
     commands.entity(id).insert((
         sprite,
